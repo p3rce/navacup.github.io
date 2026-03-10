@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register &amp; Give – NavaCup</title>
+<link rel="stylesheet" href="navacup.css">
+<style>
+/* ── PAGE HERO ── */
+.reg-hero {
+  background: var(--navy);
+  padding: calc(var(--nav-height) + 56px) 5% 72px;
+  position: relative;
+}
+.reg-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 65% 75% at 75% 50%, rgba(245,166,35,.07), transparent 60%);
+  pointer-events: none;
+}
+.reg-hero__inner {
+  max-width: var(--max-width); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: center;
+  position: relative; z-index: 2;
+}
+.reg-hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem,4.5vw,3.4rem); font-weight: 900; color: var(--white); line-height: 1.1; letter-spacing: -.025em; margin-bottom: 18px; }
+.reg-hero h1 em { font-style: normal; color: var(--gold); }
+.reg-hero p { font-size: 1.05rem; color: rgba(255,255,255,.68); line-height: 1.75; }
+.hero-trust { display: flex; flex-direction: column; gap: 14px; margin-top: 32px; }
+.trust-item { display: flex; align-items: center; gap: 12px; }
+.trust-item .ti-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(245,166,35,.15); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.trust-item span { font-size: .9rem; color: rgba(255,255,255,.72); }
+
+/* ── OPTION PANEL (right side of hero) ── */
+.option-panel {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 36px 32px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.28);
+  position: relative;
+  z-index: 10;
+}
+.option-panel h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; color: var(--navy); margin-bottom: 6px; }
+.option-panel > p { font-size: .88rem; color: var(--gray); margin-bottom: 24px; }
+
+/* Tab selector */
+.reg-tabs { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 28px; position: relative; z-index: 1; }
+.reg-tab {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 16px 10px;
+  border: 2px solid var(--light-gray);
+  border-radius: 14px;
+  cursor: pointer !important;
+  transition: all .22s;
+  background: var(--off-white);
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.reg-tab:hover { border-color: var(--navy); background: var(--white); }
+.reg-tab.active { border-color: var(--navy); background: var(--navy); }
+.reg-tab__icon { font-size: 1.6rem; }
+.reg-tab__label { font-size: .78rem; font-weight: 700; color: var(--navy); letter-spacing: .04em; text-transform: uppercase; line-height: 1.2; }
+.reg-tab.active .reg-tab__label { color: var(--white); }
+
+/* ── FORM PANELS ── */
+.form-panel { display: none; }
+.form-panel.active { display: block; }
+
+/* Ticket type selector */
+.ticket-opts { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 24px; }
+.ticket-opt {
+  border: 2px solid var(--light-gray);
+  border-radius: 14px;
+  padding: 16px 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: all .2s;
+  background: var(--white);
+}
+.ticket-opt:hover { border-color: var(--navy-mid); }
+.ticket-opt.selected { border-color: var(--gold); background: rgba(245,166,35,.05); }
+.ticket-opt__type { font-weight: 700; font-size: .88rem; color: var(--navy); margin-bottom: 4px; }
+.ticket-opt__price { font-family: var(--font-display); font-size: 1.4rem; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+.ticket-opt__note { font-size: .7rem; color: var(--gray); }
+.ticket-opt.selected .ticket-opt__price { color: #a06b0a; }
+
+/* Amount buttons (donation) */
+.amount-btns { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 14px; }
+.amount-btn {
+  padding: 13px 8px;
+  border: 2px solid var(--light-gray);
+  border-radius: 10px;
+  font-family: var(--font-body); font-size: .95rem; font-weight: 700;
+  color: var(--navy); background: var(--white); cursor: pointer;
+  transition: all .18s;
+}
+.amount-btn:hover { border-color: var(--navy); }
+.amount-btn.selected { border-color: var(--gold); background: rgba(245,166,35,.08); color: #a06b0a; }
+
+/* Additional golfer blocks */
+.extra-golfer {
+  background: var(--off-white);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 14px;
+  border-left: 3px solid var(--gold);
+}
+.extra-golfer__title { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--gold); margin-bottom: 14px; }
+
+/* Divider */
+.form-divider { border: none; border-top: 1px solid var(--light-gray); margin: 20px 0; }
+
+/* Summary row */
+.summary-row {
+  background: var(--off-white);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.summary-row__label { font-size: .9rem; color: var(--gray); }
+.summary-row__value { font-family: var(--font-display); font-size: 1.4rem; font-weight: 900; color: var(--navy); }
+
+/* Pay button */
+.pay-btn {
+  width: 100%;
+  background: var(--gold);
+  color: var(--navy);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 16px 24px;
+  font-family: var(--font-body);
+  font-size: 1rem; font-weight: 800;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  letter-spacing: .02em;
+}
+.pay-btn:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,166,35,.35); }
+.pay-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.secure-note {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: .76rem; color: var(--gold); margin-top: 10px;
+}
+.secure-note::before { content: '🔒'; }
+
+/* ── VALIDATION MESSAGES ── */
+.field-error {
+  font-size: .77rem; color: var(--red); margin-top: 4px;
+  display: none;
+}
+.nc-input.has-error { border-color: var(--red); }
+
+/* ── INFO STRIP BELOW HERO ── */
+.info-strip {
+  background: var(--off-white);
+  border-bottom: 1px solid var(--light-gray);
+  padding: 20px 5%;
+}
+.info-strip__inner {
+  max-width: var(--max-width); margin: 0 auto;
+  display: flex; gap: 40px; align-items: center; flex-wrap: wrap;
+}
+.info-item { display: flex; align-items: center; gap: 10px; font-size: .9rem; color: var(--navy); }
+.info-item strong { font-weight: 700; }
+.info-sep { width: 1px; height: 24px; background: var(--light-gray); flex-shrink: 0; }
+
+/* ── WHAT YOUR SUPPORT SECTION ── */
+.support-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; margin-top: 48px; }
+.support-card {
+  border-radius: 20px;
+  padding: 34px 26px;
+  border: 1px solid var(--light-gray);
+  transition: all .2s;
+}
+.support-card:hover { border-color: var(--gold); box-shadow: var(--shadow-md); }
+.support-card__icon { font-size: 2.2rem; margin-bottom: 14px; }
+.support-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.support-card p { font-size: .88rem; color: var(--gray); line-height: 1.65; }
+.support-card__amount {
+  display: inline-block;
+  margin-top: 12px;
+  background: rgba(245,166,35,.1);
+  color: #a06b0a;
+  font-size: .78rem; font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(245,166,35,.3);
+}
+
+/* Custom amount input wrapper */
+.custom-amount-wrap { position: relative; }
+.custom-amount-wrap::before { content: '$'; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--gray); font-size: .95rem; }
+.custom-amount-wrap .nc-input { padding-left: 28px; }
+
+/* ── LOCKED TABS ── */
+.reg-tabs--locked { opacity: 1; }
+.reg-tab--locked {
+  cursor: not-allowed !important;
+  opacity: 0.45;
+  position: relative;
+  filter: grayscale(0.3);
+}
+.reg-tab__lock {
+  font-size: .75rem;
+  margin-top: 2px;
+  line-height: 1;
+}
+
+/* ── LOCK PANEL ── */
+.lock-panel {
+  text-align: center;
+  padding: 8px 4px 4px;
+}
+.lock-panel__icon {
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+.lock-panel__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245,166,35,.1);
+  border: 1px solid rgba(245,166,35,.35);
+  border-radius: var(--radius-pill);
+  padding: 5px 14px;
+  font-size: .73rem;
+  font-weight: 700;
+  color: #a06b0a;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.lock-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: inline-block;
+  position: relative;
+  flex-shrink: 0;
+}
+.lock-dot::before {
+  content: '';
+  position: absolute; inset: -3px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  animation: lockPulse 1.5s ease-out infinite;
+}
+@keyframes lockPulse {
+  0%   { opacity:1; transform:scale(1); }
+  100% { opacity:0; transform:scale(2.4); }
+}
+.lock-panel__title {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: var(--navy);
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+.lock-panel__sub {
+  font-size: .82rem;
+  color: var(--gray);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Countdown */
+.lock-countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: var(--navy);
+  border-radius: 16px;
+  padding: 18px 16px;
+}
+.lock-cd-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 52px;
+}
+.lock-cd-num {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+  letter-spacing: -.02em;
+}
+.lock-cd-label {
+  font-size: .58rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+}
+.lock-cd-sep {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: rgba(245,166,35,.35);
+  margin-bottom: 14px;
+  padding: 0 2px;
+}
+
+.lock-panel__note {
+  font-size: .84rem;
+  color: var(--gray);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+/* Notify me form */
+.lock-notify__row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.lock-notify__input {
+  flex: 1;
+  padding: 11px 14px;
+  border: 2px solid var(--light-gray);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: .88rem;
+  color: var(--navy);
+  outline: none;
+  transition: border-color .2s;
+}
+.lock-notify__input:focus { border-color: var(--navy); }
+.lock-notify__input.has-error { border-color: var(--red); }
+.lock-notify__btn {
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 11px 20px;
+  font-family: var(--font-body);
+  font-size: .88rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s, transform .15s;
+  flex-shrink: 0;
+}
+.lock-notify__btn:hover { background: var(--navy-mid); transform: translateY(-1px); }
+.lock-notify__error {
+  display: none;
+  font-size: .75rem;
+  color: var(--red);
+  text-align: left;
+  padding-left: 4px;
+}
+.lock-notify__success {
+  display: none;
+  background: rgba(46,125,79,.1);
+  border: 1px solid rgba(46,125,79,.3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: .88rem;
+  color: #2e7d4f;
+  font-weight: 600;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+.lock-notify__success.show { display: flex; }
+.lock-notify__success-icon {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(46,125,79,.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem;
+  flex-shrink: 0;
+}
+
+/* Event detail pills */
+.lock-panel__event-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--light-gray);
+  text-align: left;
+}
+.lock-event-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .84rem;
+  color: var(--gray);
+}
+.lock-event-item span:first-child { font-size: 1rem; flex-shrink: 0; }
+
+@media(max-width:900px){
+  .reg-hero__inner{grid-template-columns:1fr;}
+  .support-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  .support-grid{grid-template-columns:1fr;}
+  .ticket-opts{grid-template-columns:1fr;}
+  .amount-btns{grid-template-columns:repeat(2,1fr);}
+  .reg-tabs{grid-template-columns:1fr;}
+  .lock-cd-num { font-size: 1.5rem; }
+  .lock-cd-block { min-width: 42px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nc-nav">
+  <a href="index.html" class="nc-logo">
+    <div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div>
+    <div class="nc-logo__tag">Bridging the Digital Divide</div>
+  </a>
+  <ul class="nc-nav__links">
+    <li class="nc-nav__dropdown">
+      <a href="about.html">About Us</a>
+      <div class="nc-dropdown"><div class="nc-dropdown__inner">
+        <a href="mission.html">Our Mission</a>
+        <a href="about.html#goals">Our Goals</a>
+        <a href="about.html#digital-divide">The Digital Divide</a>
+        <a href="about.html#inspiration">NavaCup Inspiration</a>
+      </div></div>
+    </li>
+    <li><a href="about.html#partners">Our Partners</a></li>
+    <li><a href="team.html">Our Team</a></li>
+    <li><a href="about.html#recipients">Our Recipients</a></li>
+    <li><a href="register.html" class="nc-nav__cta">Register &amp; Give</a></li>
+  </ul>
+  <button class="nc-hamburger" id="nc-hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Nav Drawer -->
+<div class="nc-nav-overlay" id="nc-nav-overlay"></div>
+<div class="nc-mobile-nav" id="nc-mobile-nav" aria-hidden="true">
+  <div class="nc-mobile-nav__inner">
+    <a href="index.html" class="nc-mobile-nav__link">Home</a>
+    <button class="nc-mobile-nav__accordion" id="mob-about-btn" aria-expanded="false">
+      About Us
+      <span class="nc-mobile-nav__accordion-icon">&#9662;</span>
+    </button>
+    <div class="nc-mobile-nav__submenu" id="mob-about-sub">
+      <a href="mission.html">Our Mission</a>
+      <a href="about.html#goals">Our Goals</a>
+      <a href="about.html#digital-divide">The Digital Divide</a>
+      <a href="about.html#inspiration">NavaCup Inspiration</a>
+    </div>
+    <a href="about.html#partners" class="nc-mobile-nav__link">Our Partners</a>
+    <a href="team.html" class="nc-mobile-nav__link">Our Team</a>
+    <a href="about.html#recipients" class="nc-mobile-nav__link">Our Recipients</a>
+    <div class="nc-mobile-nav__cta-wrap">
+      <a href="register.html" class="nc-mobile-nav__cta">Register &amp; Give</a>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="reg-hero">
+  <div class="reg-hero__inner">
+    <div>
+      <div class="nc-breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="nc-breadcrumb__sep">›</span>
+        <span class="nc-breadcrumb__current">Register &amp; Give</span>
+      </div>
+      <div class="nc-eyebrow">NavaCup 18 · June 6, 2026</div>
+      <h1>Join the movement.<br><em>Change a life.</em></h1>
+      <p>Every ticket, donation, and sponsorship goes directly to funding brand-new laptops for deserving students across the Greater Toronto Area. Choose how you want to get involved.</p>
+      <div class="hero-trust">
+        <div class="trust-item"><div class="ti-icon">✓</div><span>100% of proceeds go directly to students</span></div>
+        <div class="trust-item"><div class="ti-icon">🔒</div><span>Secure checkout powered by Stripe (coming soon)</span></div>
+        <div class="trust-item"><div class="ti-icon">📧</div><span>Confirmation email sent instantly</span></div>
+        <div class="trust-item"><div class="ti-icon">🏌️</div><span>Cardinal Golf Club · King City, Ontario</span></div>
+      </div>
+    </div>
+
+    <!-- FORM PANEL — LOCKED UNTIL REGISTRATION OPENS -->
+    <div class="option-panel" id="mainForm">
+      <h2>Get Involved</h2>
+      <p>Select how you'd like to support NavaCup 18</p>
+
+      <!-- TAB SELECTOR — visible but locked -->
+      <div class="reg-tabs reg-tabs--locked">
+        <div class="reg-tab reg-tab--locked">
+          <div class="reg-tab__icon">⛳</div>
+          <div class="reg-tab__label">Purchase<br>Tickets</div>
+          <div class="reg-tab__lock">🔒</div>
+        </div>
+        <div class="reg-tab reg-tab--locked">
+          <div class="reg-tab__icon">❤️</div>
+          <div class="reg-tab__label">Direct<br>Donation</div>
+          <div class="reg-tab__lock">🔒</div>
+        </div>
+        <div class="reg-tab reg-tab--locked">
+          <div class="reg-tab__icon">🤝</div>
+          <div class="reg-tab__label">Become a<br>Sponsor</div>
+          <div class="reg-tab__lock">🔒</div>
+        </div>
+      </div>
+
+      <!-- COUNTDOWN LOCK PANEL -->
+      <div class="lock-panel">
+        <!-- Golf flag icon -->
+        <div class="lock-panel__icon">⛳</div>
+
+        <div class="lock-panel__badge">
+          <span class="lock-dot"></span>
+          Registration Opens May 1st
+        </div>
+
+        <h3 class="lock-panel__title">Registration<br>Opens Soon</h3>
+        <p class="lock-panel__sub">NavaCup 18 · Cardinal Golf Club · King City, ON</p>
+
+        <!-- Live countdown -->
+        <div class="lock-countdown" id="lock-countdown">
+          <div class="lock-cd-block">
+            <div class="lock-cd-num" id="lc-days">--</div>
+            <div class="lock-cd-label">Days</div>
+          </div>
+          <div class="lock-cd-sep">:</div>
+          <div class="lock-cd-block">
+            <div class="lock-cd-num" id="lc-hours">--</div>
+            <div class="lock-cd-label">Hours</div>
+          </div>
+          <div class="lock-cd-sep">:</div>
+          <div class="lock-cd-block">
+            <div class="lock-cd-num" id="lc-mins">--</div>
+            <div class="lock-cd-label">Mins</div>
+          </div>
+          <div class="lock-cd-sep">:</div>
+          <div class="lock-cd-block">
+            <div class="lock-cd-num" id="lc-secs">--</div>
+            <div class="lock-cd-label">Secs</div>
+          </div>
+        </div>
+
+        <p class="lock-panel__note">
+          Can't wait? Leave your email and we'll notify you the moment registration opens.
+        </p>
+
+        <!-- Notify me form -->
+        <div class="lock-notify" id="lock-notify-form">
+          <div class="lock-notify__row">
+            <input class="lock-notify__input" type="email" id="notify-email" placeholder="your@email.com" autocomplete="email">
+            <button class="lock-notify__btn" id="notify-btn" type="button">Notify Me</button>
+          </div>
+          <div class="lock-notify__error" id="notify-error">Please enter a valid email address.</div>
+        </div>
+        <div class="lock-notify__success" id="lock-notify-success">
+          <span class="lock-notify__success-icon">✓</span>
+          You're on the list! We'll email you when registration opens.
+        </div>
+
+        <div class="lock-panel__event-details">
+          <div class="lock-event-item"><span>📅</span><span>Saturday, June 6, 2026</span></div>
+          <div class="lock-event-item"><span>📍</span><span>Cardinal Golf Club, King City, ON</span></div>
+          <div class="lock-event-item"><span>🏆</span><span>Putt for $10,000 US Challenge</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO STRIP -->
+<div class="info-strip">
+  <div class="info-strip__inner">
+    <div class="info-item">📅 <div><strong>June 6, 2026</strong> · Shotgun start 8am</div></div>
+    <div class="info-sep"></div>
+    <div class="info-item">📍 <div><strong>Cardinal Golf Club</strong> · King City, ON</div></div>
+    <div class="info-sep"></div>
+    <div class="info-item">🏆 <div><strong>Putt for $10,000 US</strong> · Challenge included</div></div>
+    <div class="info-sep"></div>
+    <!-- <div class="info-item">📧 <div>Questions? <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="85ecebe3eac5ebe4f3e4e6f0f5abeaf7e2">[email&#160;protected]</a></strong></div></div> -->
+  </div>
+</div>
+
+<!-- WHAT YOUR SUPPORT DOES -->
+<section class="nc-section nc-section--offwhite">
+  <div class="nc-inner">
+    <div class="text-center mb-56 fade-up">
+      <div class="nc-eyebrow nc-eyebrow--center">Your Impact</div>
+      <h2 class="nc-h2">Every dollar makes a difference</h2>
+      <p class="nc-lead" style="margin:0 auto;">Here's exactly how your contribution translates into real impact for students across the Greater Toronto Area.</p>
+    </div>
+    <div class="support-grid fade-up">
+      <div class="support-card">
+        <div class="support-card__icon">⛳</div>
+        <h3>Purchase Tickets</h3>
+        <p>Join us for a beautiful day of golf at Cardinal Golf Club. All ticket proceeds go directly to purchasing brand-new laptops. Individual players and groups welcome.</p>
+        <span class="support-card__amount">From $175 per golfer</span>
+      </div>
+      <div class="support-card">
+        <div class="support-card__icon">❤️</div>
+        <h3>Direct Donation</h3>
+        <p>Can't make it to the course? A direct donation in any amount has real impact. Every $50 donated contributes toward a laptop for a deserving student.</p>
+        <span class="support-card__amount">Any amount you choose</span>
+      </div>
+      <div class="support-card">
+        <div class="support-card__icon">🤝</div>
+        <h3>Hole Sponsorship</h3>
+        <p>Sponsor a hole and get your brand in front of every player on the course. You'll be recognized in our event program and on our website for the full year.</p>
+        <span class="support-card__amount">$250 · Company listing included</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="nc-footer">
+  <div class="nc-footer__inner">
+    <div class="nc-footer__top">
+      <div class="nc-footer__brand">
+        <a href="index.html" class="nc-logo"><div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div><div class="nc-logo__tag">Bridging the Digital Divide</div></a>
+        <p>NavaCup Charity Events is a grassroots organization dedicated to bridging the digital divide for Canada's youth.</p>
+      </div>
+      <div class="nc-footer__col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="team.html">Our Team</a></li><li><a href="register.html">Register &amp; Give</a></li></ul></div>
+      <div class="nc-footer__col"><h4>About</h4><ul><li><a href="mission.html">Our Mission</a></li><li><a href="about.html#goals">Our Goals</a></li><li><a href="about.html#digital-divide">The Digital Divide</a></li><li><a href="about.html#inspiration">Inspiration</a></li></ul></div>
+    </div>
+    <div class="nc-footer__bottom"><span>© 2026 NavaCup. All Rights Reserved.</span><span>"One Love" — Bob Marley</span></div>
+  </div>
+</footer>
+
+<script>
+// ── REGISTRATION OPENS: May 1, 2026 at 12:00 AM ET ──
+const REG_OPEN = new Date('2026-05-01T00:00:00-04:00');
+
+function pad(n) { return String(Math.floor(n)).padStart(2, '0'); }
+
+function updateCountdown() {
+  const diff = REG_OPEN - new Date();
+  if (diff <= 0) {
+    // Registration is open — could redirect or reveal form here
+    document.getElementById('lc-days').textContent  = '00';
+    document.getElementById('lc-hours').textContent = '00';
+    document.getElementById('lc-mins').textContent  = '00';
+    document.getElementById('lc-secs').textContent  = '00';
+    return;
+  }
+  document.getElementById('lc-days').textContent  = pad(diff / 86400000);
+  document.getElementById('lc-hours').textContent = pad((diff % 86400000) / 3600000);
+  document.getElementById('lc-mins').textContent  = pad((diff % 3600000)  / 60000);
+  document.getElementById('lc-secs').textContent  = pad((diff % 60000)    / 1000);
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ── NOTIFY ME ──
+document.getElementById('notify-btn').addEventListener('click', function() {
+  const input   = document.getElementById('notify-email');
+  const errEl   = document.getElementById('notify-error');
+  const formEl  = document.getElementById('lock-notify-form');
+  const successEl = document.getElementById('lock-notify-success');
+
+  const email = input.value.trim();
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  if (!valid) {
+    input.classList.add('has-error');
+    errEl.style.display = 'block';
+    return;
+  }
+  input.classList.remove('has-error');
+  errEl.style.display = 'none';
+
+  // ── In production: POST email to PHP/DB here ──
+  formEl.style.display = 'none';
+  successEl.classList.add('show');
+});
+
+document.getElementById('notify-email').addEventListener('input', function() {
+  this.classList.remove('has-error');
+  document.getElementById('notify-error').style.display = 'none';
+});
+
+// ── FADE-UPS ──
+const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: .1 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+
+<script>
+(function() {
+  var btn     = document.getElementById('nc-hamburger');
+  var drawer  = document.getElementById('nc-mobile-nav');
+  var overlay = document.getElementById('nc-nav-overlay');
+  var aboutBtn = document.getElementById('mob-about-btn');
+  var aboutSub = document.getElementById('mob-about-sub');
+  function openMenu() { btn.classList.add('is-open'); btn.setAttribute('aria-expanded','true'); drawer.classList.add('is-open'); drawer.setAttribute('aria-hidden','false'); overlay.classList.add('is-open'); document.body.style.overflow='hidden'; }
+  function closeMenu() { btn.classList.remove('is-open'); btn.setAttribute('aria-expanded','false'); drawer.classList.remove('is-open'); drawer.setAttribute('aria-hidden','true'); overlay.classList.remove('is-open'); document.body.style.overflow=''; }
+  btn.addEventListener('click', function() { drawer.classList.contains('is-open') ? closeMenu() : openMenu(); });
+  overlay.addEventListener('click', closeMenu);
+  drawer.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeMenu); });
+  aboutBtn.addEventListener('click', function() { var open = aboutSub.classList.toggle('is-open'); aboutBtn.classList.toggle('is-open', open); aboutBtn.setAttribute('aria-expanded', open ? 'true' : 'false'); });
+  window.addEventListener('resize', function() { if (window.innerWidth > 900) closeMenu(); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Mission – NavaCup</title>
+<link rel="stylesheet" href="navacup.css">
+<style>
+.mission-hero-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.hero-quote { border-left:3px solid var(--gold); padding-left:20px; font-family:var(--font-display); font-style:italic; font-size:1.2rem; color:rgba(255,255,255,.82); line-height:1.5; }
+
+.mission-visual { position:relative; }
+.mission-img-main { width:100%; border-radius:24px; overflow:hidden; height:420px; display:block; position:relative; }
+.mission-img-main img { width:100%; height:100%; object-fit:cover; display:block; }
+.mission-stat-float { position:absolute; bottom:-20px; left:-20px; background:var(--gold); border-radius:16px; padding:20px 24px; box-shadow:0 12px 32px rgba(245,166,35,.3); }
+.mission-stat-float .num { font-family:var(--font-display); font-size:2rem; font-weight:900; color:var(--navy); line-height:1; }
+.mission-stat-float .lbl { font-size:.78rem; font-weight:600; color:var(--navy); opacity:.75; margin-top:3px; }
+
+.statement-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; }
+.statement-text p { font-size:1.02rem; color:var(--gray); line-height:1.8; margin-bottom:18px; }
+.core-value-block { background:var(--navy); border-radius:18px; padding:28px; margin-top:8px; }
+.core-value-block h4 { font-size:.76rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+.core-value-block p { font-size:.96rem; color:rgba(255,255,255,.78); line-height:1.7; margin:0; }
+
+.pillars-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:56px; }
+.pillar-card { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:34px 26px; transition:all .2s; position:relative; overflow:hidden; }
+.pillar-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--gold); transform:scaleX(0); transition:transform .3s; transform-origin:left; }
+.pillar-card:hover { background:rgba(255,255,255,.07); border-color:rgba(245,166,35,.3); }
+.pillar-card:hover::before { transform:scaleX(1); }
+.pillar-num { font-family:var(--font-display); font-size:3rem; font-weight:900; color:rgba(245,166,35,.2); line-height:1; margin-bottom:14px; }
+.pillar-card h3 { font-size:1.1rem; font-weight:700; color:var(--white); margin-bottom:10px; }
+.pillar-card p { font-size:.89rem; color:rgba(255,255,255,.6); line-height:1.65; }
+
+.impact-row { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; margin-top:56px; }
+
+.gold-cta { background:var(--gold); padding:80px 5%; text-align:center; }
+.gold-cta h2 { font-family:var(--font-display); font-size:2.8rem; font-weight:900; color:var(--navy); margin-bottom:16px; line-height:1.1; }
+.gold-cta p { font-size:1.05rem; color:rgba(13,31,60,.72); margin-bottom:36px; line-height:1.7; max-width:580px; margin-left:auto; margin-right:auto; }
+
+@media(max-width:900px){
+  .mission-hero-inner{grid-template-columns:1fr;}
+  .statement-grid{grid-template-columns:1fr;}
+  .pillars-grid{grid-template-columns:1fr 1fr;}
+  .impact-row{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  .pillars-grid{grid-template-columns:1fr;}
+  .impact-row{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav class="nc-nav">
+  <a href="index.html" class="nc-logo">
+    <div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div>
+    <div class="nc-logo__tag">Bridging the Digital Divide</div>
+  </a>
+  <ul class="nc-nav__links">
+    <li class="nc-nav__dropdown">
+      <a href="about.html">About Us</a>
+      <div class="nc-dropdown"><div class="nc-dropdown__inner">
+        <a href="mission.html">Our Mission</a>
+        <a href="about.html#goals">Our Goals</a>
+        <a href="about.html#digital-divide">The Digital Divide</a>
+        <a href="about.html#inspiration">NavaCup Inspiration</a>
+      </div></div>
+    </li>
+    <li><a href="about.html#partners">Our Partners</a></li>
+    <li><a href="team.html">Our Team</a></li>
+    <li><a href="about.html#recipients">Our Recipients</a></li>
+    <li><a href="register.html" class="nc-nav__cta">Register &amp; Give</a></li>
+  </ul>
+  <button class="nc-hamburger" id="nc-hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Nav Drawer -->
+<div class="nc-nav-overlay" id="nc-nav-overlay"></div>
+<div class="nc-mobile-nav" id="nc-mobile-nav" aria-hidden="true">
+  <div class="nc-mobile-nav__inner">
+    <a href="index.html" class="nc-mobile-nav__link">Home</a>
+    <button class="nc-mobile-nav__accordion" id="mob-about-btn" aria-expanded="false">
+      About Us
+      <span class="nc-mobile-nav__accordion-icon">▾</span>
+    </button>
+    <div class="nc-mobile-nav__submenu" id="mob-about-sub">
+      <a href="mission.html">Our Mission</a>
+      <a href="about.html#goals">Our Goals</a>
+      <a href="about.html#digital-divide">The Digital Divide</a>
+      <a href="about.html#inspiration">NavaCup Inspiration</a>
+    </div>
+    <a href="about.html#partners" class="nc-mobile-nav__link">Our Partners</a>
+    <a href="team.html" class="nc-mobile-nav__link">Our Team</a>
+    <a href="about.html#recipients" class="nc-mobile-nav__link">Our Recipients</a>
+    <div class="nc-mobile-nav__cta-wrap">
+      <a href="register.html" class="nc-mobile-nav__cta">Register &amp; Give</a>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="nc-section nc-section--navy" style="padding-top:calc(var(--nav-height) + 60px);min-height:80vh;display:flex;align-items:center;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 85% 50%,rgba(245,166,35,.07),transparent 60%);pointer-events:none;"></div>
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(245,166,35,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(245,166,35,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;"></div>
+  <div class="nc-inner" style="position:relative;z-index:1;width:100%;">
+    <div class="mission-hero-inner">
+      <div>
+        <div class="nc-breadcrumb"><a href="index.html">Home</a><span class="nc-breadcrumb__sep">›</span><a href="about.html">About Us</a><span class="nc-breadcrumb__sep">›</span><span class="nc-breadcrumb__current">Our Mission</span></div>
+        <div class="nc-eyebrow">Our Mission</div>
+        <h1 class="nc-h1">Every student deserves<br><em>equal access</em></h1>
+        <p class="nc-lead nc-lead--white">Our mission is singular and unwavering: raise funds to bridge the digital divide among Canada's youth — one laptop at a time.</p>
+        <div class="hero-quote">"One Love" — Bob Marley</div>
+      </div>
+      <div class="mission-visual fade-up">
+        <div class="mission-img-main">
+          <img src="assets/img/ganesh-kids3.jpg" alt="Students collaborating"/>
+        </div>
+        <div class="mission-stat-float">
+          <div class="num">400+</div>
+          <div class="lbl">Laptops Awarded</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION STATEMENT -->
+<section class="nc-section nc-section--white">
+  <div class="nc-inner">
+    <div class="statement-grid">
+      <div class="fade-up">
+        <div class="nc-eyebrow">Mission Statement</div>
+        <h2 class="nc-h2">What NavaCup stands for</h2>
+        <div class="statement-text">
+          <p>The NavaCup is the annual golf tournament organized by NavaCup Charity Events. The purpose and focus of this event are to raise funds to bridge the digital divide among Canada's youth.</p>
+          <p>All proceeds from the tournament go towards purchasing brand-new laptop computers, which are awarded to deserving students within Greater Toronto Area communities.</p>
+          <p>Through our efforts and those of our partners, we aim to address the ever-widening digital divide that has been overlooked by the public and private sectors for far too long.</p>
+          <div class="core-value-block"><h4>Our Core Value</h4><p>The NavaCup initiative provides computers to primarily (but not restricted to) BIPOC at-risk youth, regardless of gender or religious views. We believe technology is a right, not a privilege.</p></div>
+        </div>
+      </div>
+      <div class="fade-up">
+        <div class="nc-eyebrow">Why It Matters</div>
+        <h2 class="nc-h2">The problem we're solving</h2>
+        <div class="statement-text">
+          <p>In a world where education, employment, and social connection increasingly depend on digital access, millions of Canadian youth are being left behind. The digital divide is not just about internet speed — it's about the fundamental tools students need to participate in the modern world.</p>
+          <p>Students without laptops can't complete assignments at home, can't access online learning resources, and can't develop the technical skills that modern employers demand. The gap between the digitally connected and the disconnected widens every year.</p>
+          <p>NavaCup bridges that gap. Since 2009, we've raised over $100,000 and awarded more than 400 brand-new laptops to deserving students in the Greater Toronto Area. And we're not done yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="nc-section nc-section--navy">
+  <div class="nc-inner">
+    <div class="fade-up">
+      <div class="nc-eyebrow">How We Work</div>
+      <h2 class="nc-h2 nc-h2--white">Our three pillars</h2>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar-card fade-up"><div class="pillar-num">01</div><h3>Raise</h3><p>Through our annual charity golf tournament, we bring together sponsors, players, and donors to raise funds. Every dollar goes directly to students.</p></div>
+      <div class="pillar-card fade-up"><div class="pillar-num">02</div><h3>Equip</h3><p>We use every dollar to purchase brand-new laptop computers — not refurbished, not hand-me-downs — giving students the best possible start.</p></div>
+      <div class="pillar-card fade-up"><div class="pillar-num">03</div><h3>Empower</h3><p>We partner with the Boys and Girls Clubs and the IMAN program at UofT Scarborough to ensure students have mentorship to maximize their technology.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT NUMBERS -->
+<section class="nc-section nc-section--offwhite">
+  <div class="nc-inner">
+    <div class="text-center mb-56 fade-up">
+      <div class="nc-eyebrow nc-eyebrow--center">Our Impact</div>
+      <h2 class="nc-h2">The numbers that drive us forward</h2>
+    </div>
+    <div class="impact-row">
+      <div class="nc-impact-card nc-impact-card--dark fade-up"><div class="nc-impact-card__num">$100K+</div><div class="nc-impact-card__label">Raised since 2009 to fund digital equity in the GTA</div></div>
+      <div class="nc-impact-card fade-up"><div class="nc-impact-card__num">400+</div><div class="nc-impact-card__label">Brand-new laptops awarded to deserving students</div></div>
+      <div class="nc-impact-card fade-up"><div class="nc-impact-card__num">17</div><div class="nc-impact-card__label">Annual tournaments hosted since our founding in 2009</div></div>
+      <div class="nc-impact-card nc-impact-card--dark fade-up"><div class="nc-impact-card__num">$21K</div><div class="nc-impact-card__label">Raised at NavaCup 17 alone in 2024</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="gold-cta">
+  <div class="fade-up">
+    <h2>Be part of the solution</h2>
+    <p>Join NavaCup 18 on June 6th at Cardinal Golf Club in King City. Register to play, sponsor a hole, or donate — every contribution makes a real difference in a student's life.</p>
+    <a href="register.html" class="nc-btn nc-btn--navy">Get Involved Today <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+  </div>
+</div>
+
+<footer class="nc-footer">
+  <div class="nc-footer__inner">
+    <div class="nc-footer__top">
+      <div class="nc-footer__brand"><a href="index.html" class="nc-logo"><div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div><div class="nc-logo__tag">Bridging the Digital Divide</div></a><p>NavaCup Charity Events is a grassroots organization dedicated to bridging the digital divide for Canada's youth.</p></div>
+      <div class="nc-footer__col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="team.html">Our Team</a></li><li><a href="register.html">Register &amp; Give</a></li></ul></div>
+      <div class="nc-footer__col"><h4>About</h4><ul><li><a href="mission.html">Our Mission</a></li><li><a href="about.html#goals">Our Goals</a></li><li><a href="about.html#digital-divide">The Digital Divide</a></li><li><a href="about.html#inspiration">Inspiration</a></li></ul></div>
+    </div>
+    <div class="nc-footer__bottom"><span>© 2026 NavaCup. All Rights Reserved.</span><span>"One Love" — Bob Marley</span></div>
+  </div>
+</footer>
+<script>
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.1});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+</script>
+
+<script>
+(function() {
+  var btn     = document.getElementById('nc-hamburger');
+  var drawer  = document.getElementById('nc-mobile-nav');
+  var overlay = document.getElementById('nc-nav-overlay');
+  var aboutBtn = document.getElementById('mob-about-btn');
+  var aboutSub = document.getElementById('mob-about-sub');
+
+  function openMenu() {
+    btn.classList.add('is-open');
+    btn.setAttribute('aria-expanded', 'true');
+    drawer.classList.add('is-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    btn.classList.remove('is-open');
+    btn.setAttribute('aria-expanded', 'false');
+    drawer.classList.remove('is-open');
+    drawer.setAttribute('aria-hidden', 'true');
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  btn.addEventListener('click', function() {
+    drawer.classList.contains('is-open') ? closeMenu() : openMenu();
+  });
+  overlay.addEventListener('click', closeMenu);
+
+  // Close on nav link click (navigate away)
+  drawer.querySelectorAll('a').forEach(function(a) {
+    a.addEventListener('click', closeMenu);
+  });
+
+  // About Us accordion
+  aboutBtn.addEventListener('click', function() {
+    var open = aboutSub.classList.toggle('is-open');
+    aboutBtn.classList.toggle('is-open', open);
+    aboutBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  // Close on resize back to desktop
+  window.addEventListener('resize', function() {
+    if (window.innerWidth > 900) closeMenu();
+  });
+})();
+</script>
+</body>
+</html>

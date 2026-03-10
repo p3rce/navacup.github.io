@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank You – NavaCup</title>
+<link rel="stylesheet" href="navacup.css">
+<style>
+/* Prevent going back to re-submit */
+body { background: var(--off-white); }
+
+.success-hero {
+  background: var(--navy);
+  padding: calc(var(--nav-height) + 64px) 5% 80px;
+  position: relative; overflow: hidden;
+  text-align: center;
+}
+.success-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(245,166,35,.08), transparent 60%);
+}
+.success-hero__inner {
+  max-width: 680px; margin: 0 auto;
+  position: relative; z-index: 1;
+}
+.success-icon {
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  background: rgba(46,125,79,.18);
+  border: 3px solid rgba(46,125,79,.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.4rem;
+  margin: 0 auto 28px;
+  animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes popIn {
+  from { opacity:0; transform: scale(.4); }
+  to   { opacity:1; transform: scale(1); }
+}
+.success-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 18px;
+}
+.success-hero h1 em { font-style: normal; color: var(--gold); }
+.success-hero p { font-size: 1.05rem; color: rgba(255,255,255,.68); line-height: 1.75; }
+
+/* RECEIPT CARD */
+.receipt-wrap {
+  max-width: 680px;
+  margin: -32px auto 0;
+  padding: 0 24px 80px;
+  position: relative; z-index: 10;
+}
+.receipt-card {
+  background: var(--white);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 16px 56px rgba(13,31,60,.14);
+}
+
+.receipt-header {
+  background: var(--navy);
+  padding: 28px 36px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.receipt-header .nc-logo__text { font-size: 1.3rem; }
+.receipt-meta { text-align: right; }
+.receipt-meta .receipt-num { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.45); }
+.receipt-meta .receipt-id { font-family: var(--font-display); font-size: 1.1rem; font-weight: 900; color: var(--gold); }
+
+.receipt-body { padding: 32px 36px; }
+
+.receipt-type-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(245,166,35,.1);
+  border: 1px solid rgba(245,166,35,.35);
+  border-radius: var(--radius-pill);
+  padding: 6px 16px;
+  font-size: .76rem; font-weight: 800;
+  color: #a06b0a;
+  letter-spacing: .08em; text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.receipt-summary {
+  border: 1px solid var(--light-gray);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.receipt-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--light-gray);
+  font-size: .92rem;
+}
+.receipt-row:last-child { border-bottom: none; }
+.receipt-row__label { color: var(--gray); }
+.receipt-row__value { font-weight: 600; color: var(--navy); }
+.receipt-row.total {
+  background: var(--navy);
+  padding: 18px 20px;
+}
+.receipt-row.total .receipt-row__label { color: rgba(255,255,255,.65); font-weight: 600; }
+.receipt-row.total .receipt-row__value {
+  font-family: var(--font-display);
+  font-size: 1.6rem; font-weight: 900;
+  color: var(--gold);
+}
+
+/* Golfer list */
+.golfer-list { margin-bottom: 24px; }
+.golfer-list h4 { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--gray); margin-bottom: 12px; }
+.golfer-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px;
+  background: var(--off-white);
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+.golfer-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: .95rem; font-weight: 900;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.golfer-info strong { display: block; font-size: .9rem; color: var(--navy); }
+.golfer-info span { font-size: .8rem; color: var(--gray); }
+.golfer-role {
+  margin-left: auto;
+  font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(245,166,35,.1);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.receipt-notice {
+  background: rgba(13,31,60,.04);
+  border-radius: 12px;
+  padding: 16px 18px;
+  font-size: .84rem;
+  color: var(--gray);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+.receipt-notice strong { color: var(--navy); }
+
+.receipt-footer {
+  border-top: 1px solid var(--light-gray);
+  padding: 20px 36px;
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+}
+
+/* WHAT'S NEXT */
+.whats-next { max-width: 800px; margin: 0 auto; padding: 0 24px 80px; }
+.whats-next h2 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 900; color: var(--navy); margin-bottom: 28px; text-align: center; }
+.next-steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+.next-step { background: var(--white); border-radius: 18px; padding: 26px 22px; text-align: center; box-shadow: var(--shadow-sm); }
+.next-step__icon { font-size: 1.8rem; margin-bottom: 12px; }
+.next-step h3 { font-size: .95rem; font-weight: 700; color: var(--navy); margin-bottom: 7px; }
+.next-step p { font-size: .83rem; color: var(--gray); line-height: 1.6; }
+
+@media(max-width:600px){
+  .receipt-header { flex-direction:column; align-items:flex-start; }
+  .receipt-meta { text-align:left; }
+  .next-steps { grid-template-columns: 1fr; }
+  .receipt-body, .receipt-footer { padding-left: 20px; padding-right: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nc-nav">
+  <a href="index.html" class="nc-logo">
+    <div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div>
+    <div class="nc-logo__tag">Bridging the Digital Divide</div>
+  </a>
+  <ul class="nc-nav__links">
+    <li class="nc-nav__dropdown">
+      <a href="about.html">About Us</a>
+      <div class="nc-dropdown"><div class="nc-dropdown__inner">
+        <a href="mission.html">Our Mission</a>
+        <a href="about.html#goals">Our Goals</a>
+        <a href="about.html#digital-divide">The Digital Divide</a>
+        <a href="about.html#inspiration">NavaCup Inspiration</a>
+      </div></div>
+    </li>
+    <li><a href="about.html#partners">Our Partners</a></li>
+    <li><a href="team.html">Our Team</a></li>
+    <li><a href="about.html#recipients">Our Recipients</a></li>
+    <li><a href="register.html" class="nc-nav__cta">Register &amp; Give</a></li>
+  </ul>
+  <button class="nc-hamburger" id="nc-hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Nav Drawer -->
+<div class="nc-nav-overlay" id="nc-nav-overlay"></div>
+<div class="nc-mobile-nav" id="nc-mobile-nav" aria-hidden="true">
+  <div class="nc-mobile-nav__inner">
+    <a href="index.html" class="nc-mobile-nav__link">Home</a>
+    <button class="nc-mobile-nav__accordion" id="mob-about-btn" aria-expanded="false">
+      About Us
+      <span class="nc-mobile-nav__accordion-icon">▾</span>
+    </button>
+    <div class="nc-mobile-nav__submenu" id="mob-about-sub">
+      <a href="mission.html">Our Mission</a>
+      <a href="about.html#goals">Our Goals</a>
+      <a href="about.html#digital-divide">The Digital Divide</a>
+      <a href="about.html#inspiration">NavaCup Inspiration</a>
+    </div>
+    <a href="about.html#partners" class="nc-mobile-nav__link">Our Partners</a>
+    <a href="team.html" class="nc-mobile-nav__link">Our Team</a>
+    <a href="about.html#recipients" class="nc-mobile-nav__link">Our Recipients</a>
+    <div class="nc-mobile-nav__cta-wrap">
+      <a href="register.html" class="nc-mobile-nav__cta">Register &amp; Give</a>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="success-hero">
+  <div class="success-hero__inner">
+    <div class="success-icon">✓</div>
+    <h1>Thank you for your<br><em>incredible support!</em></h1>
+    <p>Your contribution goes directly toward putting a brand-new laptop in the hands of a deserving student in the Greater Toronto Area. You're making a real difference.</p>
+  </div>
+</section>
+
+<!-- RECEIPT -->
+<div class="receipt-wrap">
+  <div class="receipt-card">
+    <div class="receipt-header">
+      <a href="index.html" class="nc-logo">
+        <div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div>
+        <div class="nc-logo__tag">Bridging the Digital Divide</div>
+      </a>
+      <div class="receipt-meta">
+        <div class="receipt-num">Order Confirmation</div>
+        <div class="receipt-id" id="receipt-id">NC-2026-XXXX</div>
+      </div>
+    </div>
+    <div class="receipt-body">
+      <div class="receipt-type-badge" id="receipt-badge">⛳ NavaCup 18 Registration</div>
+
+      <!-- Dynamic golfer list (tickets only) -->
+      <div class="golfer-list" id="golfer-list" style="display:none;">
+        <h4>Registered Golfers</h4>
+        <div id="golfer-items"></div>
+      </div>
+
+      <!-- Summary rows -->
+      <div class="receipt-summary" id="receipt-summary">
+        <!-- Filled by JS -->
+      </div>
+
+      <div class="receipt-notice">
+        <strong>Important:</strong> A confirmation email will be sent to the address provided once our payment system is live. Please save this page or take a screenshot as your temporary receipt. NavaCup 18 takes place on <strong>Saturday, June 6, 2026</strong> at Cardinal Golf Club, King City, Ontario.
+      </div>
+    </div>
+    <div class="receipt-footer">
+      <button onclick="window.print()" class="nc-btn nc-btn--navy nc-btn--sm">🖨 Print Receipt</button>
+      <a href="index.html" class="nc-btn nc-btn--gold nc-btn--sm">Return Home</a>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT'S NEXT -->
+<div class="whats-next">
+  <h2>What happens next</h2>
+  <div class="next-steps">
+    <div class="next-step"><div class="next-step__icon">📧</div><h3>Confirmation Email</h3><p>A detailed confirmation will be sent to your email address once our payment system launches.</p></div>
+    <div class="next-step"><div class="next-step__icon">📅</div><h3>June 6, 2026</h3><p>Join us at Cardinal Golf Club in King City for a beautiful day of golf, community, and impact.</p></div>
+    <div class="next-step"><div class="next-step__icon">💻</div><h3>Students Benefit</h3><p>Every dollar raised goes toward brand-new laptops for deserving students across the GTA.</p></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="nc-footer">
+  <div class="nc-footer__inner">
+    <div class="nc-footer__top">
+      <div class="nc-footer__brand">
+        <a href="index.html" class="nc-logo"><div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div><div class="nc-logo__tag">Bridging the Digital Divide</div></a>
+        <p>NavaCup Charity Events is a grassroots organization dedicated to bridging the digital divide for Canada's youth.</p>
+      </div>
+      <div class="nc-footer__col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="team.html">Our Team</a></li><li><a href="register.html">Register &amp; Give</a></li></ul></div>
+      <div class="nc-footer__col"><h4>About</h4><ul><li><a href="mission.html">Our Mission</a></li><li><a href="about.html#goals">Our Goals</a></li><li><a href="about.html#digital-divide">The Digital Divide</a></li><li><a href="about.html#inspiration">Inspiration</a></li></ul></div>
+    </div>
+    <div class="nc-footer__bottom"><span>© 2026 NavaCup. All Rights Reserved.</span><span>"One Love" — Bob Marley</span></div>
+  </div>
+</footer>
+
+<script>
+// Generate a pseudo-random order ID (production will use DB-generated IDs)
+function genOrderId() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  return 'NC-2026-' + Array.from({length:6}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+}
+document.getElementById('receipt-id').textContent = genOrderId();
+
+// Load stored order from sessionStorage (written by register.html)
+let order = null;
+try {
+  const raw = sessionStorage.getItem('nc_order');
+  if (raw) order = JSON.parse(raw);
+} catch(e) {}
+
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function buildSummaryRow(label, value) {
+  return `<div class="receipt-row"><span class="receipt-row__label">${escHtml(label)}</span><span class="receipt-row__value">${escHtml(value)}</span></div>`;
+}
+
+const summaryEl = document.getElementById('receipt-summary');
+const badgeEl   = document.getElementById('receipt-badge');
+const golferListEl  = document.getElementById('golfer-list');
+const golferItemsEl = document.getElementById('golfer-items');
+
+const now = new Date();
+const dateStr = now.toLocaleDateString('en-CA', {year:'numeric',month:'long',day:'numeric'});
+const timeStr = now.toLocaleTimeString('en-CA', {hour:'2-digit',minute:'2-digit'});
+
+if (order && order.type === 'tickets') {
+  badgeEl.innerHTML = '⛳ NavaCup 18 Ticket Registration';
+  const typeName = {individual:'Individual Ticket',pair:'Pair Tickets',foursome:'Foursome Package'}[order.ticketType] || 'Ticket';
+
+  // Golfer list
+  golferListEl.style.display = 'block';
+  order.golfers.forEach(g => {
+    const initials = (g.first[0]||'') + (g.last[0]||'');
+    golferItemsEl.innerHTML += `
+      <div class="golfer-item">
+        <div class="golfer-avatar">${escHtml(initials.toUpperCase())}</div>
+        <div class="golfer-info"><strong>${escHtml(g.first)} ${escHtml(g.last)}</strong><span>${escHtml(g.email)}</span></div>
+        ${g.role==='captain' ? '<span class="golfer-role">Captain</span>' : ''}
+      </div>`;
+  });
+
+  summaryEl.innerHTML =
+    buildSummaryRow('Package', typeName) +
+    buildSummaryRow('Golfers', order.golfers.length) +
+    buildSummaryRow('Event', 'NavaCup 18 — June 6, 2026') +
+    buildSummaryRow('Venue', 'Cardinal Golf Club, King City ON') +
+    buildSummaryRow('Date Submitted', dateStr + ' at ' + timeStr) +
+    `<div class="receipt-row total"><span class="receipt-row__label">Amount</span><span class="receipt-row__value">$${order.amount.toLocaleString()}</span></div>`;
+
+} else if (order && order.type === 'donation') {
+  badgeEl.innerHTML = '❤️ Direct Donation';
+  summaryEl.innerHTML =
+    buildSummaryRow('Donor', order.first + ' ' + order.last) +
+    buildSummaryRow('Email', order.email) +
+    buildSummaryRow('Purpose', 'Bridging the Digital Divide — Student Laptops') +
+    buildSummaryRow('Date Submitted', dateStr + ' at ' + timeStr) +
+    `<div class="receipt-row total"><span class="receipt-row__label">Donation Amount</span><span class="receipt-row__value">$${order.amount.toLocaleString()}</span></div>`;
+
+} else if (order && order.type === 'sponsor') {
+  badgeEl.innerHTML = '🤝 Hole Sponsorship';
+  summaryEl.innerHTML =
+    buildSummaryRow('Contact', order.first + ' ' + order.last) +
+    buildSummaryRow('Company', order.company) +
+    buildSummaryRow('Email', order.email) +
+    buildSummaryRow('Package', 'Hole Sponsorship — NavaCup 18') +
+    buildSummaryRow('Includes', 'Signage at hole + program + website listing') +
+    buildSummaryRow('Date Submitted', dateStr + ' at ' + timeStr) +
+    `<div class="receipt-row total"><span class="receipt-row__label">Sponsorship Amount</span><span class="receipt-row__value">$250</span></div>`;
+
+} else {
+  // Fallback if no session data
+  badgeEl.innerHTML = '✓ NavaCup 18 Contribution';
+  summaryEl.innerHTML =
+    buildSummaryRow('Event', 'NavaCup 18 — June 6, 2026') +
+    buildSummaryRow('Venue', 'Cardinal Golf Club, King City ON') +
+    buildSummaryRow('Date Submitted', dateStr + ' at ' + timeStr) +
+    `<div class="receipt-row total"><span class="receipt-row__label">Status</span><span class="receipt-row__value" style="font-size:1rem;">Confirmed ✓</span></div>`;
+}
+
+// Clear session so page can't be re-used to fake a receipt
+try { sessionStorage.removeItem('nc_order'); } catch(e) {}
+</script>
+
+<script>
+(function() {
+  var btn     = document.getElementById('nc-hamburger');
+  var drawer  = document.getElementById('nc-mobile-nav');
+  var overlay = document.getElementById('nc-nav-overlay');
+  var aboutBtn = document.getElementById('mob-about-btn');
+  var aboutSub = document.getElementById('mob-about-sub');
+
+  function openMenu() {
+    btn.classList.add('is-open');
+    btn.setAttribute('aria-expanded', 'true');
+    drawer.classList.add('is-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    btn.classList.remove('is-open');
+    btn.setAttribute('aria-expanded', 'false');
+    drawer.classList.remove('is-open');
+    drawer.setAttribute('aria-hidden', 'true');
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  btn.addEventListener('click', function() {
+    drawer.classList.contains('is-open') ? closeMenu() : openMenu();
+  });
+  overlay.addEventListener('click', closeMenu);
+
+  // Close on nav link click (navigate away)
+  drawer.querySelectorAll('a').forEach(function(a) {
+    a.addEventListener('click', closeMenu);
+  });
+
+  // About Us accordion
+  aboutBtn.addEventListener('click', function() {
+    var open = aboutSub.classList.toggle('is-open');
+    aboutBtn.classList.toggle('is-open', open);
+    aboutBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  // Close on resize back to desktop
+  window.addEventListener('resize', function() {
+    if (window.innerWidth > 900) closeMenu();
+  });
+})();
+</script>
+</body>
+</html>

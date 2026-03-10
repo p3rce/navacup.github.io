@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register &amp; Give – NavaCup</title>
+<link rel="stylesheet" href="navacup.css">
+<style>
+/* ── PAGE HERO ── */
+.reg-hero {
+  background: var(--navy);
+  padding: calc(var(--nav-height) + 56px) 5% 72px;
+  position: relative;
+}
+.reg-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 65% 75% at 75% 50%, rgba(245,166,35,.07), transparent 60%);
+  pointer-events: none;
+}
+.reg-hero__inner {
+  max-width: var(--max-width); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: center;
+  position: relative; z-index: 2;
+}
+.reg-hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem,4.5vw,3.4rem); font-weight: 900; color: var(--white); line-height: 1.1; letter-spacing: -.025em; margin-bottom: 18px; }
+.reg-hero h1 em { font-style: normal; color: var(--gold); }
+.reg-hero p { font-size: 1.05rem; color: rgba(255,255,255,.68); line-height: 1.75; }
+.hero-trust { display: flex; flex-direction: column; gap: 14px; margin-top: 32px; }
+.trust-item { display: flex; align-items: center; gap: 12px; }
+.trust-item .ti-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(245,166,35,.15); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.trust-item span { font-size: .9rem; color: rgba(255,255,255,.72); }
+
+/* ── OPTION PANEL (right side of hero) ── */
+.option-panel {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 36px 32px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.28);
+  position: relative;
+  z-index: 10;
+}
+.option-panel h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; color: var(--navy); margin-bottom: 6px; }
+.option-panel > p { font-size: .88rem; color: var(--gray); margin-bottom: 24px; }
+
+/* Tab selector */
+.reg-tabs { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 28px; position: relative; z-index: 1; }
+.reg-tab {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 16px 10px;
+  border: 2px solid var(--light-gray);
+  border-radius: 14px;
+  cursor: pointer !important;
+  transition: all .22s;
+  background: var(--off-white);
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.reg-tab:hover { border-color: var(--navy); background: var(--white); }
+.reg-tab.active { border-color: var(--navy); background: var(--navy); }
+.reg-tab__icon { font-size: 1.6rem; }
+.reg-tab__label { font-size: .78rem; font-weight: 700; color: var(--navy); letter-spacing: .04em; text-transform: uppercase; line-height: 1.2; }
+.reg-tab.active .reg-tab__label { color: var(--white); }
+
+/* ── FORM PANELS ── */
+.form-panel { display: none; }
+.form-panel.active { display: block; }
+
+/* Ticket type selector */
+.ticket-opts { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 24px; }
+.ticket-opt {
+  border: 2px solid var(--light-gray);
+  border-radius: 14px;
+  padding: 16px 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: all .2s;
+  background: var(--white);
+}
+.ticket-opt:hover { border-color: var(--navy-mid); }
+.ticket-opt.selected { border-color: var(--gold); background: rgba(245,166,35,.05); }
+.ticket-opt__type { font-weight: 700; font-size: .88rem; color: var(--navy); margin-bottom: 4px; }
+.ticket-opt__price { font-family: var(--font-display); font-size: 1.4rem; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+.ticket-opt__note { font-size: .7rem; color: var(--gray); }
+.ticket-opt.selected .ticket-opt__price { color: #a06b0a; }
+
+/* Amount buttons (donation) */
+.amount-btns { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 14px; }
+.amount-btn {
+  padding: 13px 8px;
+  border: 2px solid var(--light-gray);
+  border-radius: 10px;
+  font-family: var(--font-body); font-size: .95rem; font-weight: 700;
+  color: var(--navy); background: var(--white); cursor: pointer;
+  transition: all .18s;
+}
+.amount-btn:hover { border-color: var(--navy); }
+.amount-btn.selected { border-color: var(--gold); background: rgba(245,166,35,.08); color: #a06b0a; }
+
+/* Additional golfer blocks */
+.extra-golfer {
+  background: var(--off-white);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 14px;
+  border-left: 3px solid var(--gold);
+}
+.extra-golfer__title { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--gold); margin-bottom: 14px; }
+
+/* Divider */
+.form-divider { border: none; border-top: 1px solid var(--light-gray); margin: 20px 0; }
+
+/* Summary row */
+.summary-row {
+  background: var(--off-white);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.summary-row__label { font-size: .9rem; color: var(--gray); }
+.summary-row__value { font-family: var(--font-display); font-size: 1.4rem; font-weight: 900; color: var(--navy); }
+
+/* Pay button */
+.pay-btn {
+  width: 100%;
+  background: var(--gold);
+  color: var(--navy);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 16px 24px;
+  font-family: var(--font-body);
+  font-size: 1rem; font-weight: 800;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  letter-spacing: .02em;
+}
+.pay-btn:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,166,35,.35); }
+.pay-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.secure-note {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: .76rem; color: var(--gold); margin-top: 10px;
+}
+.secure-note::before { content: '🔒'; }
+
+/* ── VALIDATION MESSAGES ── */
+.field-error {
+  font-size: .77rem; color: var(--red); margin-top: 4px;
+  display: none;
+}
+.nc-input.has-error { border-color: var(--red); }
+
+/* ── INFO STRIP BELOW HERO ── */
+.info-strip {
+  background: var(--off-white);
+  border-bottom: 1px solid var(--light-gray);
+  padding: 20px 5%;
+}
+.info-strip__inner {
+  max-width: var(--max-width); margin: 0 auto;
+  display: flex; gap: 40px; align-items: center; flex-wrap: wrap;
+}
+.info-item { display: flex; align-items: center; gap: 10px; font-size: .9rem; color: var(--navy); }
+.info-item strong { font-weight: 700; }
+.info-sep { width: 1px; height: 24px; background: var(--light-gray); flex-shrink: 0; }
+
+/* ── WHAT YOUR SUPPORT SECTION ── */
+.support-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; margin-top: 48px; }
+.support-card {
+  border-radius: 20px;
+  padding: 34px 26px;
+  border: 1px solid var(--light-gray);
+  transition: all .2s;
+}
+.support-card:hover { border-color: var(--gold); box-shadow: var(--shadow-md); }
+.support-card__icon { font-size: 2.2rem; margin-bottom: 14px; }
+.support-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.support-card p { font-size: .88rem; color: var(--gray); line-height: 1.65; }
+.support-card__amount {
+  display: inline-block;
+  margin-top: 12px;
+  background: rgba(245,166,35,.1);
+  color: #a06b0a;
+  font-size: .78rem; font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(245,166,35,.3);
+}
+
+/* Custom amount input wrapper */
+.custom-amount-wrap { position: relative; }
+.custom-amount-wrap::before { content: '$'; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--gray); font-size: .95rem; }
+.custom-amount-wrap .nc-input { padding-left: 28px; }
+
+@media(max-width:900px){
+  .reg-hero__inner{grid-template-columns:1fr;}
+  .support-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  .support-grid{grid-template-columns:1fr;}
+  .ticket-opts{grid-template-columns:1fr;}
+  .amount-btns{grid-template-columns:repeat(2,1fr);}
+  .reg-tabs{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nc-nav">
+  <a href="index.html" class="nc-logo">
+    <div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div>
+    <div class="nc-logo__tag">Bridging the Digital Divide</div>
+  </a>
+  <ul class="nc-nav__links">
+    <li class="nc-nav__dropdown">
+      <a href="about.html">About Us</a>
+      <div class="nc-dropdown"><div class="nc-dropdown__inner">
+        <a href="mission.html">Our Mission</a>
+        <a href="about.html#goals">Our Goals</a>
+        <a href="about.html#digital-divide">The Digital Divide</a>
+        <a href="about.html#inspiration">NavaCup Inspiration</a>
+      </div></div>
+    </li>
+    <li><a href="about.html#partners">Our Partners</a></li>
+    <li><a href="team.html">Our Team</a></li>
+    <li><a href="about.html#recipients">Our Recipients</a></li>
+    <li><a href="register.html" class="nc-nav__cta">Register &amp; Give</a></li>
+  </ul>
+  <button class="nc-hamburger" id="nc-hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Nav Drawer -->
+<div class="nc-nav-overlay" id="nc-nav-overlay"></div>
+<div class="nc-mobile-nav" id="nc-mobile-nav" aria-hidden="true">
+  <div class="nc-mobile-nav__inner">
+    <a href="index.html" class="nc-mobile-nav__link">Home</a>
+    <button class="nc-mobile-nav__accordion" id="mob-about-btn" aria-expanded="false">
+      About Us
+      <span class="nc-mobile-nav__accordion-icon">▾</span>
+    </button>
+    <div class="nc-mobile-nav__submenu" id="mob-about-sub">
+      <a href="mission.html">Our Mission</a>
+      <a href="about.html#goals">Our Goals</a>
+      <a href="about.html#digital-divide">The Digital Divide</a>
+      <a href="about.html#inspiration">NavaCup Inspiration</a>
+    </div>
+    <a href="about.html#partners" class="nc-mobile-nav__link">Our Partners</a>
+    <a href="team.html" class="nc-mobile-nav__link">Our Team</a>
+    <a href="about.html#recipients" class="nc-mobile-nav__link">Our Recipients</a>
+    <div class="nc-mobile-nav__cta-wrap">
+      <a href="register.html" class="nc-mobile-nav__cta">Register &amp; Give</a>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="reg-hero">
+  <div class="reg-hero__inner">
+    <div>
+      <div class="nc-breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="nc-breadcrumb__sep">›</span>
+        <span class="nc-breadcrumb__current">Register &amp; Give</span>
+      </div>
+      <div class="nc-eyebrow">NavaCup 18 · June 6, 2026</div>
+      <h1>Join the movement.<br><em>Change a life.</em></h1>
+      <p>Every ticket, donation, and sponsorship goes directly to funding brand-new laptops for deserving students across the Greater Toronto Area. Choose how you want to get involved.</p>
+      <div class="hero-trust">
+        <div class="trust-item"><div class="ti-icon">✓</div><span>100% of proceeds go directly to students</span></div>
+        <div class="trust-item"><div class="ti-icon">🔒</div><span>Secure checkout powered by Stripe (coming soon)</span></div>
+        <div class="trust-item"><div class="ti-icon">📧</div><span>Confirmation email sent instantly</span></div>
+        <div class="trust-item"><div class="ti-icon">🏌️</div><span>Cardinal Golf Club · King City, Ontario</span></div>
+      </div>
+    </div>
+
+    <!-- FORM PANEL -->
+    <div class="option-panel" id="mainForm">
+      <h2>Get Involved</h2>
+      <p>Select how you'd like to support NavaCup 18</p>
+
+      <!-- TAB SELECTOR -->
+      <div class="reg-tabs">
+        <div class="reg-tab active" data-tab="tickets">
+          <div class="reg-tab__icon">⛳</div>
+          <div class="reg-tab__label">Purchase<br>Tickets</div>
+        </div>
+        <div class="reg-tab" data-tab="donate">
+          <div class="reg-tab__icon">❤️</div>
+          <div class="reg-tab__label">Direct<br>Donation</div>
+        </div>
+        <div class="reg-tab" data-tab="sponsor">
+          <div class="reg-tab__icon">🤝</div>
+          <div class="reg-tab__label">Become a<br>Sponsor</div>
+        </div>
+      </div>
+
+      <!-- ===== TICKETS PANEL ===== -->
+      <div class="form-panel active" id="panel-tickets">
+        <div class="ticket-opts">
+          <div class="ticket-opt selected" data-price="175" data-spots="1">
+            <div class="ticket-opt__type">Individual</div>
+            <div class="ticket-opt__price">$175</div>
+            <div class="ticket-opt__note">1 golfer</div>
+          </div>
+          <div class="ticket-opt" data-price="350" data-spots="2">
+            <div class="ticket-opt__type">Pair</div>
+            <div class="ticket-opt__price">$350</div>
+            <div class="ticket-opt__note">2 golfers</div>
+          </div>
+          <div class="ticket-opt" data-price="700" data-spots="4">
+            <div class="ticket-opt__type">Foursome</div>
+            <div class="ticket-opt__price">$700</div>
+            <div class="ticket-opt__note">4 golfers</div>
+          </div>
+        </div>
+
+        <p style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray);margin-bottom:14px;">Captain (Required)</p>
+        <div class="nc-input-row">
+          <div class="nc-form-group">
+            <label>First Name <span class="nc-req">*</span></label>
+            <input class="nc-input" type="text" id="t-cap-first" autocomplete="given-name" placeholder="Jane">
+            <div class="field-error" id="err-t-cap-first">Please enter first name</div>
+          </div>
+          <div class="nc-form-group">
+            <label>Last Name <span class="nc-req">*</span></label>
+            <input class="nc-input" type="text" id="t-cap-last" autocomplete="family-name" placeholder="Smith">
+            <div class="field-error" id="err-t-cap-last">Please enter last name</div>
+          </div>
+        </div>
+        <div class="nc-form-group">
+          <label>Email Address <span class="nc-req">*</span></label>
+          <input class="nc-input" type="email" id="t-cap-email" autocomplete="email" placeholder="jane@example.com">
+          <div class="field-error" id="err-t-cap-email">Please enter a valid email</div>
+        </div>
+
+        <!-- Extra golfers injected here -->
+        <div id="extra-golfers"></div>
+
+        <hr class="form-divider">
+        <div class="summary-row">
+          <span class="summary-row__label">Total</span>
+          <span class="summary-row__value" id="ticket-total">$175</span>
+        </div>
+        <button class="pay-btn">
+          Continue to Payment
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <!-- <p class="secure-note">Secure payment · Stripe integration coming soon</p> -->
+      </div>
+
+      <!-- ===== DONATE PANEL ===== -->
+      <div class="form-panel" id="panel-donate">
+        <p style="font-size:.84rem;color:var(--gray);margin-bottom:16px;">Select a donation amount or enter a custom amount</p>
+        <div class="amount-btns">
+          <button class="amount-btn" data-amount="10">$10</button>
+          <button class="amount-btn selected" data-amount="50">$50</button>
+          <button class="amount-btn" data-amount="100">$100</button>
+          <button class="amount-btn" data-amount="200">$200</button>
+        </div>
+        <div class="nc-form-group">
+          <label>Custom Amount</label>
+          <div class="custom-amount-wrap">
+            <input class="nc-input" type="number" id="d-custom" min="1" max="100000" step="1" placeholder="Other amount" oninput="onCustomAmount(this)">
+          </div>
+          <div class="field-error" id="err-d-amount">Please enter or select a donation amount</div>
+        </div>
+
+        <hr class="form-divider">
+
+        <div class="nc-input-row">
+          <div class="nc-form-group">
+            <label>First Name <span class="nc-req">*</span></label>
+            <input class="nc-input" type="text" id="d-first" autocomplete="given-name" placeholder="Jane">
+            <div class="field-error" id="err-d-first">Please enter first name</div>
+          </div>
+          <div class="nc-form-group">
+            <label>Last Name <span class="nc-req">*</span></label>
+            <input class="nc-input" type="text" id="d-last" autocomplete="family-name" placeholder="Smith">
+            <div class="field-error" id="err-d-last">Please enter last name</div>
+          </div>
+        </div>
+        <div class="nc-form-group">
+          <label>Email Address <span class="nc-req">*</span></label>
+          <input class="nc-input" type="email" id="d-email" autocomplete="email" placeholder="jane@example.com">
+          <div class="field-error" id="err-d-email">Please enter a valid email</div>
+        </div>
+
+        <hr class="form-divider">
+        <div class="summary-row">
+          <span class="summary-row__label">Donation Amount</span>
+          <span class="summary-row__value" id="donate-total">$50</span>
+        </div>
+        <button class="pay-btn">
+          Complete Donation
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <p class="secure-note">Secure payment · Stripe integration coming soon</p>
+      </div>
+
+      <!-- ===== SPONSOR PANEL ===== -->
+      <div class="form-panel" id="panel-sponsor">
+        <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.3);border-radius:14px;padding:18px 20px;margin-bottom:22px;">
+          <p style="font-size:.82rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Hole Sponsorship Package</p>
+          <div style="font-family:var(--font-display);font-size:2rem;font-weight:900;color:var(--navy);line-height:1;margin-bottom:4px;">$250</div>
+          <p style="font-size:.84rem;color:var(--gray);line-height:1.55;">Your company name displayed at a dedicated hole on the course. Includes recognition in our program and on our website.</p>
+        </div>
+
+        <div class="nc-input-row">
+          <div class="nc-form-group">
+            <label>First Name <span class="nc-req">*</span></label>
+            <input class="nc-input" type="text" id="s-first" autocomplete="given-name" placeholder="Jane">
+            <div class="field-error" id="err-s-first">Please enter first name</div>
+          </div>
+          <div class="nc-form-group">
+            <label>Last Name <span class="nc-req">*</span></label>
+            <input class="nc-input" type="text" id="s-last" autocomplete="family-name" placeholder="Smith">
+            <div class="field-error" id="err-s-last">Please enter last name</div>
+          </div>
+        </div>
+        <div class="nc-form-group">
+          <label>Company Name <span class="nc-req">*</span></label>
+          <input class="nc-input" type="text" id="s-company" autocomplete="organization" placeholder="Acme Corp">
+          <div class="field-error" id="err-s-company">Please enter company name</div>
+        </div>
+        <div class="nc-form-group">
+          <label>Email Address <span class="nc-req">*</span></label>
+          <input class="nc-input" type="email" id="s-email" autocomplete="email" placeholder="jane@example.com">
+          <div class="field-error" id="err-s-email">Please enter a valid email</div>
+        </div>
+
+        <hr class="form-divider">
+        <div class="summary-row">
+          <span class="summary-row__label">Sponsorship Amount</span>
+          <span class="summary-row__value">$250</span>
+        </div>
+        <button class="pay-btn">
+          Complete Sponsorship
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <p class="secure-note">Secure payment · Stripe integration coming soon</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO STRIP -->
+<div class="info-strip">
+  <div class="info-strip__inner">
+    <div class="info-item">📅 <div><strong>June 6, 2026</strong> · Shotgun start 8am</div></div>
+    <div class="info-sep"></div>
+    <div class="info-item">📍 <div><strong>Cardinal Golf Club</strong> · King City, ON</div></div>
+    <div class="info-sep"></div>
+    <div class="info-item">🏆 <div><strong>Putt for $10,000 US</strong> · Challenge included</div></div>
+    <div class="info-sep"></div>
+    <!-- <div class="info-item">📧 <div>Questions? <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="85ecebe3eac5ebe4f3e4e6f0f5abeaf7e2">[email&#160;protected]</a></strong></div></div> -->
+  </div>
+</div>
+
+<!-- WHAT YOUR SUPPORT DOES -->
+<section class="nc-section nc-section--offwhite">
+  <div class="nc-inner">
+    <div class="text-center mb-56 fade-up">
+      <div class="nc-eyebrow nc-eyebrow--center">Your Impact</div>
+      <h2 class="nc-h2">Every dollar makes a difference</h2>
+      <p class="nc-lead" style="margin:0 auto;">Here's exactly how your contribution translates into real impact for students across the Greater Toronto Area.</p>
+    </div>
+    <div class="support-grid fade-up">
+      <div class="support-card">
+        <div class="support-card__icon">⛳</div>
+        <h3>Purchase Tickets</h3>
+        <p>Join us for a beautiful day of golf at Cardinal Golf Club. All ticket proceeds go directly to purchasing brand-new laptops. Individual players and groups welcome.</p>
+        <span class="support-card__amount">From $175 per golfer</span>
+      </div>
+      <div class="support-card">
+        <div class="support-card__icon">❤️</div>
+        <h3>Direct Donation</h3>
+        <p>Can't make it to the course? A direct donation in any amount has real impact. Every $50 donated contributes toward a laptop for a deserving student.</p>
+        <span class="support-card__amount">Any amount you choose</span>
+      </div>
+      <div class="support-card">
+        <div class="support-card__icon">🤝</div>
+        <h3>Hole Sponsorship</h3>
+        <p>Sponsor a hole and get your brand in front of every player on the course. You'll be recognized in our event program and on our website for the full year.</p>
+        <span class="support-card__amount">$250 · Company listing included</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="nc-footer">
+  <div class="nc-footer__inner">
+    <div class="nc-footer__top">
+      <div class="nc-footer__brand">
+        <a href="index.html" class="nc-logo"><div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div><div class="nc-logo__tag">Bridging the Digital Divide</div></a>
+        <p>NavaCup Charity Events is a grassroots organization dedicated to bridging the digital divide for Canada's youth.</p>
+      </div>
+      <div class="nc-footer__col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="team.html">Our Team</a></li><li><a href="register.html">Register &amp; Give</a></li></ul></div>
+      <div class="nc-footer__col"><h4>About</h4><ul><li><a href="mission.html">Our Mission</a></li><li><a href="about.html#goals">Our Goals</a></li><li><a href="about.html#digital-divide">The Digital Divide</a></li><li><a href="about.html#inspiration">Inspiration</a></li></ul></div>
+    </div>
+    <div class="nc-footer__bottom"><span>© 2026 NavaCup. All Rights Reserved.</span><span>"One Love" — Bob Marley</span></div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* =====================================================
+   SECURITY: All form data is sanitized before use.
+   Input length limits, type checks, and XSS prevention
+   are applied throughout. In production, all validation
+   must be re-run server-side before any DB write/charge.
+   ===================================================== */
+
+const MAX_NAME_LEN   = 60;
+const MAX_EMAIL_LEN  = 254;
+const MAX_CO_LEN     = 120;
+const MAX_AMOUNT     = 100000;
+
+function sanitizeText(s) {
+  return String(s).replace(/[<>"'&]/g, '').trim().substring(0, MAX_NAME_LEN);
+}
+function sanitizeEmail(s) {
+  return String(s).trim().substring(0, MAX_EMAIL_LEN);
+}
+function isValidEmail(e) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+}
+
+// ── TAB SWITCHING ──
+let activeTab = 'tickets';
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.reg-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.form-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tab));
+}
+
+// ── TICKET LOGIC ──
+let selectedPrice  = 175;
+let selectedSpots  = 1;
+
+function selectTicket(el) {
+  document.querySelectorAll('.ticket-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPrice = parseInt(el.dataset.price, 10);
+  selectedSpots = parseInt(el.dataset.spots, 10);
+  document.getElementById('ticket-total').textContent = '$' + selectedPrice.toLocaleString();
+  renderExtraGolfers();
+}
+
+function renderExtraGolfers() {
+  const container = document.getElementById('extra-golfers');
+  container.innerHTML = '';
+  for (let i = 2; i <= selectedSpots; i++) {
+    container.innerHTML += `
+      <div class="extra-golfer" id="golfer-${i}">
+        <div class="extra-golfer__title">Golfer ${i}</div>
+        <div class="nc-input-row">
+          <div class="nc-form-group">
+            <label>First Name <span class="nc-req">*</span></label>
+            <input class="nc-input" type="text" id="t-g${i}-first" maxlength="${MAX_NAME_LEN}" placeholder="First name">
+            <div class="field-error" id="err-t-g${i}-first">Please enter first name</div>
+          </div>
+          <div class="nc-form-group">
+            <label>Last Name <span class="nc-req">*</span></label>
+            <input class="nc-input" type="text" id="t-g${i}-last" maxlength="${MAX_NAME_LEN}" placeholder="Last name">
+            <div class="field-error" id="err-t-g${i}-last">Please enter last name</div>
+          </div>
+        </div>
+        <div class="nc-form-group">
+          <label>Email Address <span class="nc-req">*</span></label>
+          <input class="nc-input" type="email" id="t-g${i}-email" maxlength="${MAX_EMAIL_LEN}" placeholder="golfer@example.com">
+          <div class="field-error" id="err-t-g${i}-email">Please enter a valid email</div>
+        </div>
+      </div>`;
+  }
+}
+
+// ── DONATION AMOUNT ──
+let selectedDonation = 50;
+
+function selectAmount(btn) {
+  document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedDonation = parseInt(btn.dataset.amount, 10);
+  document.getElementById('d-custom').value = '';
+  document.getElementById('donate-total').textContent = '$' + selectedDonation.toLocaleString();
+}
+
+function onCustomAmount(inp) {
+  document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+  const val = parseInt(inp.value, 10);
+  selectedDonation = (!isNaN(val) && val > 0 && val <= MAX_AMOUNT) ? val : 0;
+  document.getElementById('donate-total').textContent = selectedDonation ? '$' + selectedDonation.toLocaleString() : '—';
+}
+
+// ── SHOW / HIDE ERROR ──
+function showErr(id, show) {
+  const el = document.getElementById('err-' + id);
+  const inp = document.getElementById(id);
+  if (!el || !inp) return;
+  el.style.display = show ? 'block' : 'none';
+  inp.classList.toggle('has-error', show);
+}
+
+// ── BUILD PAYLOAD (safe, sanitized) ──
+function buildPayload(type) {
+  if (type === 'tickets') {
+    const capFirst = sanitizeText(document.getElementById('t-cap-first').value);
+    const capLast  = sanitizeText(document.getElementById('t-cap-last').value);
+    const capEmail = sanitizeEmail(document.getElementById('t-cap-email').value);
+    const golfers  = [{ first: capFirst, last: capLast, email: capEmail, role: 'captain' }];
+    for (let i = 2; i <= selectedSpots; i++) {
+      golfers.push({
+        first: sanitizeText(document.getElementById(`t-g${i}-first`).value),
+        last:  sanitizeText(document.getElementById(`t-g${i}-last`).value),
+        email: sanitizeEmail(document.getElementById(`t-g${i}-email`).value),
+        role:  'golfer'
+      });
+    }
+    return { type: 'tickets', ticketType: selectedSpots === 1 ? 'individual' : selectedSpots === 2 ? 'pair' : 'foursome', amount: selectedPrice, golfers };
+  }
+  if (type === 'donate') {
+    return {
+      type: 'donation',
+      amount: selectedDonation,
+      first: sanitizeText(document.getElementById('d-first').value),
+      last:  sanitizeText(document.getElementById('d-last').value),
+      email: sanitizeEmail(document.getElementById('d-email').value)
+    };
+  }
+  if (type === 'sponsor') {
+    return {
+      type: 'sponsor',
+      amount: 250,
+      first:   sanitizeText(document.getElementById('s-first').value),
+      last:    sanitizeText(document.getElementById('s-last').value),
+      company: sanitizeText(document.getElementById('s-company').value).substring(0, MAX_CO_LEN),
+      email:   sanitizeEmail(document.getElementById('s-email').value)
+    };
+  }
+}
+
+// ── VALIDATE ──
+function validate(type) {
+  let ok = true;
+
+  if (type === 'tickets') {
+    const capFirst = document.getElementById('t-cap-first').value.trim();
+    const capLast  = document.getElementById('t-cap-last').value.trim();
+    const capEmail = document.getElementById('t-cap-email').value.trim();
+    if (!capFirst) { showErr('t-cap-first', true); ok = false; } else showErr('t-cap-first', false);
+    if (!capLast)  { showErr('t-cap-last',  true); ok = false; } else showErr('t-cap-last',  false);
+    if (!isValidEmail(capEmail)) { showErr('t-cap-email', true); ok = false; } else showErr('t-cap-email', false);
+    for (let i = 2; i <= selectedSpots; i++) {
+      const f = (document.getElementById(`t-g${i}-first`)?.value || '').trim();
+      const l = (document.getElementById(`t-g${i}-last`)?.value  || '').trim();
+      const e = (document.getElementById(`t-g${i}-email`)?.value || '').trim();
+      if (!f) { showErr(`t-g${i}-first`, true); ok = false; } else showErr(`t-g${i}-first`, false);
+      if (!l) { showErr(`t-g${i}-last`,  true); ok = false; } else showErr(`t-g${i}-last`,  false);
+      if (!isValidEmail(e)) { showErr(`t-g${i}-email`, true); ok = false; } else showErr(`t-g${i}-email`, false);
+    }
+  }
+
+  if (type === 'donate') {
+    if (!selectedDonation || selectedDonation <= 0) { document.getElementById('err-d-amount').style.display = 'block'; ok = false; } else document.getElementById('err-d-amount').style.display = 'none';
+    const f = document.getElementById('d-first').value.trim();
+    const l = document.getElementById('d-last').value.trim();
+    const e = document.getElementById('d-email').value.trim();
+    if (!f) { showErr('d-first', true); ok = false; } else showErr('d-first', false);
+    if (!l) { showErr('d-last',  true); ok = false; } else showErr('d-last',  false);
+    if (!isValidEmail(e)) { showErr('d-email', true); ok = false; } else showErr('d-email', false);
+  }
+
+  if (type === 'sponsor') {
+    const f = document.getElementById('s-first').value.trim();
+    const l = document.getElementById('s-last').value.trim();
+    const c = document.getElementById('s-company').value.trim();
+    const e = document.getElementById('s-email').value.trim();
+    if (!f) { showErr('s-first',   true); ok = false; } else showErr('s-first',   false);
+    if (!l) { showErr('s-last',    true); ok = false; } else showErr('s-last',    false);
+    if (!c) { showErr('s-company', true); ok = false; } else showErr('s-company', false);
+    if (!isValidEmail(e)) { showErr('s-email', true); ok = false; } else showErr('s-email', false);
+  }
+
+  return ok;
+}
+
+// ── SUBMIT ──
+function submitForm(type) {
+  if (!validate(type)) {
+    document.querySelector('.form-panel.active').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  const payload = buildPayload(type);
+  // Store sanitized payload for success page display
+  try { sessionStorage.setItem('nc_order', JSON.stringify(payload)); } catch(e) {}
+  // ── In production: send payload to PHP endpoint → Stripe → DB ──
+  window.location.href = 'success.html';
+}
+
+// ── INIT ──
+renderExtraGolfers();
+
+// Attach events via addEventListener (bulletproof vs inline onclick)
+document.querySelectorAll('.reg-tab').forEach(tab => {
+  tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+});
+document.querySelectorAll('.ticket-opt').forEach(opt => {
+  opt.addEventListener('click', () => selectTicket(opt));
+});
+document.querySelectorAll('.amount-btn').forEach(btn => {
+  btn.addEventListener('click', () => selectAmount(btn));
+});
+document.getElementById('d-custom').addEventListener('input', function() { onCustomAmount(this); });
+
+document.querySelectorAll('.pay-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const type = document.querySelector('.form-panel.active').id.replace('panel-', '');
+    submitForm(type);
+  });
+});
+
+// Hash-based deep linking
+const hash = location.hash.replace('#','');
+if (['tickets','donate','sponsor'].includes(hash)) switchTab(hash);
+
+// Scroll-based fade-ups
+const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: .1 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+
+<script>
+(function() {
+  var btn     = document.getElementById('nc-hamburger');
+  var drawer  = document.getElementById('nc-mobile-nav');
+  var overlay = document.getElementById('nc-nav-overlay');
+  var aboutBtn = document.getElementById('mob-about-btn');
+  var aboutSub = document.getElementById('mob-about-sub');
+
+  function openMenu() {
+    btn.classList.add('is-open');
+    btn.setAttribute('aria-expanded', 'true');
+    drawer.classList.add('is-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    btn.classList.remove('is-open');
+    btn.setAttribute('aria-expanded', 'false');
+    drawer.classList.remove('is-open');
+    drawer.setAttribute('aria-hidden', 'true');
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  btn.addEventListener('click', function() {
+    drawer.classList.contains('is-open') ? closeMenu() : openMenu();
+  });
+  overlay.addEventListener('click', closeMenu);
+
+  // Close on nav link click (navigate away)
+  drawer.querySelectorAll('a').forEach(function(a) {
+    a.addEventListener('click', closeMenu);
+  });
+
+  // About Us accordion
+  aboutBtn.addEventListener('click', function() {
+    var open = aboutSub.classList.toggle('is-open');
+    aboutBtn.classList.toggle('is-open', open);
+    aboutBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  // Close on resize back to desktop
+  window.addEventListener('resize', function() {
+    if (window.innerWidth > 900) closeMenu();
+  });
+})();
+</script>
+</body>
+</html>
