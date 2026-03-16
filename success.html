@@ -183,10 +183,7 @@ body { background: var(--off-white); }
 
 <!-- NAV -->
 <nav class="nc-nav">
-  <a href="index.html" class="nc-logo">
-    <div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div>
-    <div class="nc-logo__tag">Bridging the Digital Divide</div>
-  </a>
+  <a href="index.html" class="nc-logo-img"><img src="assets/img/navacup1.png" alt="NavaCup" class="nav-logo-img"></a>
   <ul class="nc-nav__links">
     <li class="nc-nav__dropdown">
       <a href="about.html">About Us</a>
@@ -197,7 +194,7 @@ body { background: var(--off-white); }
         <a href="about.html#inspiration">NavaCup Inspiration</a>
       </div></div>
     </li>
-    <li><a href="about.html#partners">Our Partners</a></li>
+    <li><a href="about.html#donors">Our Donors</a></li>
     <li><a href="team.html">Our Team</a></li>
     <li><a href="about.html#recipients">Our Recipients</a></li>
     <li><a href="register.html" class="nc-nav__cta">Register &amp; Give</a></li>
@@ -207,27 +204,20 @@ body { background: var(--off-white); }
   </button>
 </nav>
 
-<!-- Mobile Nav Drawer -->
 <div class="nc-nav-overlay" id="nc-nav-overlay"></div>
 <div class="nc-mobile-nav" id="nc-mobile-nav" aria-hidden="true">
   <div class="nc-mobile-nav__inner">
-    <a href="index.html" class="nc-mobile-nav__link">Home</a>
-    <button class="nc-mobile-nav__accordion" id="mob-about-btn" aria-expanded="false">
-      About Us
-      <span class="nc-mobile-nav__accordion-icon">▾</span>
-    </button>
+    <button class="nc-mobile-nav__accordion" id="mob-about-btn" aria-expanded="false">About Us <span class="nc-mobile-nav__accordion-icon">&#9662;</span></button>
     <div class="nc-mobile-nav__submenu" id="mob-about-sub">
       <a href="mission.html">Our Mission</a>
       <a href="about.html#goals">Our Goals</a>
       <a href="about.html#digital-divide">The Digital Divide</a>
       <a href="about.html#inspiration">NavaCup Inspiration</a>
     </div>
-    <a href="about.html#partners" class="nc-mobile-nav__link">Our Partners</a>
+    <a href="about.html#donors" class="nc-mobile-nav__link">Our Donors</a>
     <a href="team.html" class="nc-mobile-nav__link">Our Team</a>
     <a href="about.html#recipients" class="nc-mobile-nav__link">Our Recipients</a>
-    <div class="nc-mobile-nav__cta-wrap">
-      <a href="register.html" class="nc-mobile-nav__cta">Register &amp; Give</a>
-    </div>
+    <div class="nc-mobile-nav__cta-wrap"><a href="register.html" class="nc-mobile-nav__cta">Register &amp; Give</a></div>
   </div>
 </div>
 
@@ -244,10 +234,7 @@ body { background: var(--off-white); }
 <div class="receipt-wrap">
   <div class="receipt-card">
     <div class="receipt-header">
-      <a href="index.html" class="nc-logo">
-        <div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div>
-        <div class="nc-logo__tag">Bridging the Digital Divide</div>
-      </a>
+      <a href="index.html" class="nc-logo-img"><img src="assets/img/navacup1.png" alt="NavaCup" class="nav-logo-img"></a>
       <div class="receipt-meta">
         <div class="receipt-num">Order Confirmation</div>
         <div class="receipt-id" id="receipt-id">NC-2026-XXXX</div>
@@ -293,11 +280,11 @@ body { background: var(--off-white); }
   <div class="nc-footer__inner">
     <div class="nc-footer__top">
       <div class="nc-footer__brand">
-        <a href="index.html" class="nc-logo"><div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div><div class="nc-logo__tag">Bridging the Digital Divide</div></a>
+        <a href="index.html" class="nc-logo-img"><img src="assets/img/navacup1.png" alt="NavaCup" class="receipt-logo-img"></a>
         <p>NavaCup Charity Events is a grassroots organization dedicated to bridging the digital divide for Canada's youth.</p>
       </div>
       <div class="nc-footer__col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="team.html">Our Team</a></li><li><a href="register.html">Register &amp; Give</a></li></ul></div>
-      <div class="nc-footer__col"><h4>About</h4><ul><li><a href="mission.html">Our Mission</a></li><li><a href="about.html#goals">Our Goals</a></li><li><a href="about.html#digital-divide">The Digital Divide</a></li><li><a href="about.html#inspiration">Inspiration</a></li></ul></div>
+      
     </div>
     <div class="nc-footer__bottom"><span>© 2026 NavaCup. All Rights Reserved.</span><span>"One Love" — Bob Marley</span></div>
   </div>
@@ -366,16 +353,16 @@ if (order && order.type === 'tickets') {
     buildSummaryRow('Date Submitted', dateStr + ' at ' + timeStr) +
     `<div class="receipt-row total"><span class="receipt-row__label">Donation Amount</span><span class="receipt-row__value">$${order.amount.toLocaleString()}</span></div>`;
 
-} else if (order && order.type === 'sponsor') {
-  badgeEl.innerHTML = '🤝 Hole Sponsorship';
+} else if (order && order.type === 'donor') {
+  badgeEl.innerHTML = '🤝 Hole Donorship';
   summaryEl.innerHTML =
     buildSummaryRow('Contact', order.first + ' ' + order.last) +
     buildSummaryRow('Company', order.company) +
     buildSummaryRow('Email', order.email) +
-    buildSummaryRow('Package', 'Hole Sponsorship — NavaCup 18') +
+    buildSummaryRow('Package', 'Hole Donorship — NavaCup 18') +
     buildSummaryRow('Includes', 'Signage at hole + program + website listing') +
     buildSummaryRow('Date Submitted', dateStr + ' at ' + timeStr) +
-    `<div class="receipt-row total"><span class="receipt-row__label">Sponsorship Amount</span><span class="receipt-row__value">$250</span></div>`;
+    `<div class="receipt-row total"><span class="receipt-row__label">Donorship Amount</span><span class="receipt-row__value">$250</span></div>`;
 
 } else {
   // Fallback if no session data
@@ -392,51 +379,15 @@ try { sessionStorage.removeItem('nc_order'); } catch(e) {}
 </script>
 
 <script>
-(function() {
-  var btn     = document.getElementById('nc-hamburger');
-  var drawer  = document.getElementById('nc-mobile-nav');
-  var overlay = document.getElementById('nc-nav-overlay');
-  var aboutBtn = document.getElementById('mob-about-btn');
-  var aboutSub = document.getElementById('mob-about-sub');
-
-  function openMenu() {
-    btn.classList.add('is-open');
-    btn.setAttribute('aria-expanded', 'true');
-    drawer.classList.add('is-open');
-    drawer.setAttribute('aria-hidden', 'false');
-    overlay.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeMenu() {
-    btn.classList.remove('is-open');
-    btn.setAttribute('aria-expanded', 'false');
-    drawer.classList.remove('is-open');
-    drawer.setAttribute('aria-hidden', 'true');
-    overlay.classList.remove('is-open');
-    document.body.style.overflow = '';
-  }
-
-  btn.addEventListener('click', function() {
-    drawer.classList.contains('is-open') ? closeMenu() : openMenu();
-  });
-  overlay.addEventListener('click', closeMenu);
-
-  // Close on nav link click (navigate away)
-  drawer.querySelectorAll('a').forEach(function(a) {
-    a.addEventListener('click', closeMenu);
-  });
-
-  // About Us accordion
-  aboutBtn.addEventListener('click', function() {
-    var open = aboutSub.classList.toggle('is-open');
-    aboutBtn.classList.toggle('is-open', open);
-    aboutBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-
-  // Close on resize back to desktop
-  window.addEventListener('resize', function() {
-    if (window.innerWidth > 900) closeMenu();
-  });
+(function(){
+  var btn=document.getElementById('nc-hamburger'),drawer=document.getElementById('nc-mobile-nav'),overlay=document.getElementById('nc-nav-overlay'),aBtn=document.getElementById('mob-about-btn'),aSub=document.getElementById('mob-about-sub');
+  function open(){btn.classList.add('is-open');btn.setAttribute('aria-expanded','true');drawer.classList.add('is-open');drawer.setAttribute('aria-hidden','false');overlay.classList.add('is-open');document.body.style.overflow='hidden';}
+  function close(){btn.classList.remove('is-open');btn.setAttribute('aria-expanded','false');drawer.classList.remove('is-open');drawer.setAttribute('aria-hidden','true');overlay.classList.remove('is-open');document.body.style.overflow='';}
+  btn.addEventListener('click',function(){drawer.classList.contains('is-open')?close():open();});
+  overlay.addEventListener('click',close);
+  drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
+  aBtn.addEventListener('click',function(){var o=aSub.classList.toggle('is-open');aBtn.classList.toggle('is-open',o);aBtn.setAttribute('aria-expanded',o?'true':'false');});
+  window.addEventListener('resize',function(){if(window.innerWidth>900)close();});
 })();
 </script>
 </body>

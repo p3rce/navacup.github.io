@@ -6,127 +6,239 @@
 <title>NavaCup – Bridging the Digital Divide</title>
 <link rel="stylesheet" href="navacup.css">
 <style>
-/* HOME-SPECIFIC */
+/* ── HERO ── */
 .hero {
   min-height: 100vh;
-  background: var(--navy);
-  display: flex; align-items: center;
-  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; position: relative; overflow: hidden;
   padding-top: var(--nav-height);
+  background: var(--blue);
 }
-.hero-bg {
+
+/* ── PHOTO SLIDESHOW BACKGROUND ── */
+.hero-slides { position: absolute; inset: 0; z-index: 0; }
+.hero-slide {
   position: absolute; inset: 0;
+  background-size: cover; background-position: center; background-repeat: no-repeat;
+  opacity: 0;
+  transform: scale(1.06);  /* all slides start slightly zoomed */
+  transition: opacity 1.4s ease-in-out, transform 16s ease-in-out;
+}
+.hero-slide.active {
+  opacity: 1;
+  transform: scale(1.12);  /* slowly zooms while visible — smooth, no jump */
+}
+@keyframes heroZoom { from { transform: scale(1.0); } to { transform: scale(1.06); } }
+
+/* Placeholder state */
+.hero-slide--placeholder {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-mid) 60%, var(--blue-bright) 100%);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 12px; color: rgba(255,255,255,.3);
+}
+.hero-slide--placeholder::before { content: '📷'; font-size: 2.5rem; opacity: .35; }
+.hero-slide--placeholder .slide-label {
+  font-size: .78rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; opacity: .35;
+}
+
+/* ── LIGHTER OVERLAY — photos breathe more ── */
+.hero-overlay {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
-    radial-gradient(ellipse 80% 60% at 70% 50%, rgba(245,166,35,0.08), transparent 60%),
-    linear-gradient(135deg, #0d1f3c 0%, #0a1628 100%);
+    radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.26) 100%),
+    linear-gradient(to top,
+      rgba(4,14,40,.88) 0%,
+      rgba(4,14,40,.40) 26%,
+      rgba(4,14,40,.08) 52%,
+      rgba(4,14,40,.16) 100%),
+    linear-gradient(135deg, rgba(10,45,110,.14) 0%, rgba(14,127,201,.04) 100%);
 }
-.hero-grid {
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(245,166,35,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(245,166,35,0.05) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse at center, black, transparent 70%);
+
+/* Progress bar */
+.hero-progress { position: absolute; top: 0; left: 0; right: 0; z-index: 3; height: 2px; background: rgba(255,255,255,.08); }
+.hero-progress__bar { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); width: 0%; transition: width linear; }
+
+/* Dot nav */
+.hero-nav { position: absolute; bottom: 90px; right: 5%; z-index: 3; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.hero-nav__dot { width: 32px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.26); cursor: pointer; transition: all .25s; border: none; }
+.hero-nav__dot.active { background: var(--gold); width: 48px; }
+.hero-nav__dot:hover:not(.active) { background: rgba(255,255,255,.55); width: 40px; }
+
+/* Photo counter */
+.hero-counter { position: absolute; bottom: 92px; left: 5%; z-index: 3; display: flex; align-items: center; gap: 6px; font-size: .7rem; font-weight: 700; color: rgba(255,255,255,.42); letter-spacing: .08em; }
+.hero-counter__current { color: rgba(255,255,255,.88); font-size: .85rem; }
+.hero-counter__sep { color: rgba(255,255,255,.2); }
+
+/* Very subtle grid texture */
+.hero-bg-grid {
+  position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background-image: linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px), linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at center, black, transparent 58%);
 }
+.hero-glow {
+  position: absolute; top: 8%; right: -6%; width: 440px; height: 440px;
+  border-radius: 50%; background: radial-gradient(ellipse, rgba(245,184,0,.07), transparent 65%);
+  pointer-events: none; z-index: 2;
+}
+
+/* ── HERO INNER: fixed text col, fluid stats col ── */
 .hero__inner {
-  position: relative; z-index: 2;
-  max-width: var(--max-width); margin: 0 auto;
-  padding: 80px 5%;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 60px; align-items: center; width: 100%;
+  position: relative; z-index: 3; max-width: var(--max-width); margin: 0 auto;
+  padding: 56px 5% 40px;
+  display: grid; grid-template-columns: 500px 1fr;
+  gap: 48px; align-items: center; width: 100%; flex: 1;
 }
-.hero-badge-pill {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: rgba(245,166,35,0.12);
-  border: 1px solid rgba(245,166,35,0.3);
-  border-radius: var(--radius-pill);
-  padding: 6px 16px; margin-bottom: 28px;
+
+/* ── GLASS CARD BEHIND HERO TEXT ── */
+.hero__text {
+  background: rgba(4, 14, 40, 0.50);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 20px;
+  padding: 38px 34px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.07);
 }
-.hero-badge-pill span { color: var(--gold); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
-.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
 
-.hero__text p { font-size: 1.08rem; color: rgba(255,255,255,0.7); line-height: 1.75; margin-bottom: 38px; max-width: 480px; }
-.hero__ctas { display: flex; gap: 14px; flex-wrap: wrap; }
-
-.hero__stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.hero__stats .nc-stat-card.span2 { grid-column: span 2; }
-
-.scroll-cue {
-  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  color: rgba(255,255,255,0.35); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: rgba(245,184,0,.15); border: 1px solid rgba(245,184,0,.36);
+  border-radius: var(--radius-pill); padding: 6px 16px; margin-bottom: 20px;
 }
-.scroll-cue__line { width: 1px; height: 40px; background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent); animation: scrollAnim 1.5s ease-in-out infinite; }
-@keyframes scrollAnim { 0%{opacity:1;transform:scaleY(1);transform-origin:top} 100%{opacity:0;transform:scaleY(0.2);transform-origin:top} }
+.hero-badge span { color: var(--gold); font-size: .76rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.hero__text .nc-h1 { margin-bottom: 14px; }
+.hero__text p { font-size: 1rem; color: rgba(255,255,255,.84); line-height: 1.74; margin-bottom: 30px; }
+.hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; }
 
-.float-badge {
-  position: absolute; bottom: 40px; right: 5%;
-  display: flex; align-items: center; gap: 12px;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 12px; padding: 12px 18px;
-  animation: float 3s ease-in-out infinite;
+/* ── Register & Give button — taller, grounded with shadow ── */
+.nc-nav__cta {
+  padding: 11px 24px !important;
+  box-shadow: 0 4px 14px rgba(245,184,0,.28) !important;
 }
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-.float-badge__icon { font-size: 1.4rem; }
-.float-badge__text { font-size: 0.78rem; color: rgba(255,255,255,0.72); line-height: 1.35; }
-.float-badge__text strong { color: var(--white); display: block; }
 
-/* HOW IT WORKS */
-.steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; position: relative; }
-.steps::before { content:''; position:absolute; top:36px; left:calc(12.5% + 16px); right:calc(12.5% + 16px); height:2px; background:linear-gradient(90deg,var(--gold),var(--navy-mid)); }
+/* ── STATS GRID — even, consistent, no heavy shadows ── */
+.hero__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 12px;
+  align-self: center;
+}
+.hero__stats .span2 { grid-column: span 2; }
+.hero__stats .nc-stat-card {
+  background: rgba(4, 14, 40, 0.44);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.11);
+  box-shadow: none;
+  padding: 20px 18px;
+}
+.hero__stats .nc-stat-card--gold {
+  background: rgba(245,184,0,.15);
+  border-color: rgba(245,184,0,.36);
+}
+.hero__stats .nc-stat-card__num   { font-size: 2.2rem; }
+.hero__stats .nc-stat-card__label { font-size: .8rem; line-height: 1.45; margin-top: 4px; }
+
+/* ── DONOR STRIP ── */
+.hero__donors {
+  position: relative; z-index: 3;
+  border-top: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.30);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 11px 0; flex-shrink: 0;
+}
+.hero__donors-label { text-align: center; font-size: .66rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: 9px; }
+.hero__donors-track { overflow: hidden; }
+.donor-logos { display: flex; gap: 12px; animation: ncMarquee 42s linear infinite; width: max-content; }
+.donor-logo-item {
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 7px; padding: 7px 18px; height: 40px;
+  font-size: .79rem; font-weight: 700; color: rgba(255,255,255,.78);
+  flex-shrink: 0; white-space: nowrap; letter-spacing: .02em;
+}
+
+/* ── IMPACT SECTION ── */
+.impact-split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.impact-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ── TIMELINE ── */
+.timeline-container { background: var(--white); border-radius: var(--radius-xl); padding: 40px 36px; border: 1px solid var(--light-gray); box-shadow: var(--shadow-md); }
+.timeline-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+.timeline-header h3 { font-size: 1rem; font-weight: 700; color: var(--blue); }
+.timeline-total { font-size: 1.6rem; font-weight: 900; color: var(--blue); letter-spacing: -.03em; }
+.timeline-total span { font-size: .8rem; font-weight: 500; color: var(--gray); }
+.chart-area { position: relative; display: flex; align-items: flex-end; gap: 5px; height: 160px; border-bottom: 2px solid var(--light-gray); margin-bottom: 0; }
+.chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; }
+.chart-bar { width: 100%; border-radius: 4px 4px 0 0; background: linear-gradient(to top, var(--blue), var(--blue-bright)); transition: all .25s; min-height: 4px; position: relative; }
+.chart-bar-wrap:hover .chart-bar { background: linear-gradient(to top,var(--gold),var(--gold-light)); transform: scaleY(1.05); transform-origin: bottom; }
+.chart-bar-wrap.active .chart-bar { background: linear-gradient(to top,var(--gold),var(--gold-light)); }
+.chart-bar__tooltip { position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--blue); color: var(--white); font-size: .7rem; font-weight: 700; padding: 4px 8px; border-radius: 5px; white-space: nowrap; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 10; }
+.chart-bar-wrap:hover .chart-bar__tooltip, .chart-bar-wrap.active .chart-bar__tooltip { opacity: 1; }
+.chart-years-row { display: flex; gap: 5px; padding-top: 6px; }
+.chart-year-label { flex: 1; font-size: .58rem; font-weight: 600; color: var(--gray); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: clip; }
+.chart-detail { background: var(--blue-light); border-radius: var(--radius-md); padding: 14px 18px; margin-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; border: 1px solid rgba(14,127,201,.15); }
+.chart-detail__year { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--blue-bright); margin-bottom: 2px; }
+.chart-detail__amount { font-size: 1.4rem; font-weight: 900; color: var(--blue); letter-spacing: -.02em; }
+.chart-running-total { text-align: right; flex-shrink: 0; }
+.chart-running-total .label { font-size: .72rem; color: var(--gray); margin-bottom: 2px; }
+.chart-running-total .value { font-size: 1.1rem; font-weight: 800; color: var(--blue); letter-spacing: -.02em; }
+
+/* ── HOW IT WORKS ── */
+.steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; position: relative; }
+.steps::before { content:''; position:absolute; top:34px; left:calc(12.5% + 14px); right:calc(12.5% + 14px); height:2px; background:linear-gradient(90deg,var(--gold),var(--blue-light)); }
 .step { position:relative; z-index:1; text-align:center; }
-.step__icon { width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 18px; font-size:1.6rem; border:3px solid var(--off-white); }
+.step__icon { width:68px; height:68px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:1.5rem; border:3px solid var(--off-white); }
 .step:nth-child(1) .step__icon { background:var(--gold); }
-.step:nth-child(2) .step__icon { background:var(--navy-mid); }
-.step:nth-child(3) .step__icon { background:var(--navy); }
-.step:nth-child(4) .step__icon { background:var(--green); }
-.step h3 { font-size:1rem; font-weight:700; color:var(--navy); margin-bottom:8px; }
-.step p { font-size:0.87rem; color:var(--gray); line-height:1.6; }
+.step:nth-child(2) .step__icon { background:var(--blue-mid); }
+.step:nth-child(3) .step__icon { background:var(--blue); }
+.step:nth-child(4) .step__icon { background:var(--blue-bright); }
+.step h3 { font-size:.97rem; font-weight:700; color:var(--blue); margin-bottom:7px; }
+.step p  { font-size:.85rem; color:var(--gray); line-height:1.6; }
 
-/* EVENT CARD */
-.event-card {
-  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12);
-  border-radius:var(--radius-xl); padding:52px;
-  display:grid; grid-template-columns:1fr auto; gap:48px; align-items:center;
+/* ── EVENT CARD ── */
+.event-card { background:var(--blue); border-radius:var(--radius-xl); padding:48px; display:grid; grid-template-columns:1fr auto; gap:44px; align-items:center; }
+.event-tag { display:inline-flex; align-items:center; gap:8px; background:rgba(245,184,0,.15); border:1px solid rgba(245,184,0,.4); border-radius:var(--radius-pill); padding:5px 13px; font-size:.72rem; font-weight:700; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; margin-bottom:16px; }
+.event-card h2 { font-size:2.2rem; font-weight:900; color:var(--white); margin-bottom:12px; line-height:1.12; letter-spacing:-.025em; }
+.event-card > div > p { color:rgba(255,255,255,.65); font-size:1rem; line-height:1.72; margin-bottom:26px; }
+.event-details { display:flex; gap:24px; margin-bottom:30px; flex-wrap:wrap; }
+.event-detail { display:flex; align-items:center; gap:9px; font-size:.87rem; color:rgba(255,255,255,.74); }
+.event-detail__icon { width:32px; height:32px; border-radius:8px; background:rgba(255,255,255,.1); display:flex; align-items:center; justify-content:center; font-size:.95rem; flex-shrink:0; }
+
+/* ── CTA BOX ── */
+.cta-box { background:var(--blue); border-radius:var(--radius-xl); padding:60px 64px; display:grid; grid-template-columns:1fr 1fr; gap:52px; align-items:center; position:relative; overflow:hidden; }
+.cta-box::before { content:''; position:absolute; top:-60px; right:-60px; width:280px; height:280px; border-radius:50%; background:radial-gradient(ellipse,rgba(245,184,0,.1),transparent 70%); pointer-events:none; }
+.cta-box h2 { font-size:2.3rem; font-weight:900; color:var(--white); line-height:1.15; margin-bottom:14px; letter-spacing:-.025em; }
+.cta-box > div > p { color:rgba(255,255,255,.65); font-size:1rem; line-height:1.72; }
+.cta-options { display:flex; flex-direction:column; gap:12px; }
+.cta-option { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14); border-radius:var(--radius-md); padding:20px; text-decoration:none; transition:all .2s; display:flex; align-items:center; gap:16px; color:var(--white); }
+.cta-option:hover { background:rgba(255,255,255,.12); border-color:rgba(245,184,0,.4); }
+.cta-option__icon { width:44px; height:44px; border-radius:10px; background:rgba(245,184,0,.16); display:flex; align-items:center; justify-content:center; font-size:1.25rem; flex-shrink:0; }
+.cta-option__text strong { display:block; font-size:.95rem; margin-bottom:2px; }
+.cta-option__text span  { font-size:.81rem; color:rgba(255,255,255,.5); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .hero__inner { grid-template-columns: 1fr 1fr; }
 }
-.event-tag { display:inline-flex; align-items:center; gap:8px; background:rgba(245,166,35,0.14); border:1px solid rgba(245,166,35,0.35); border-radius:var(--radius-pill); padding:6px 14px; font-size:0.73rem; font-weight:700; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; margin-bottom:18px; }
-.event-card h2 { font-family:var(--font-display); font-size:2.5rem; font-weight:900; color:var(--white); margin-bottom:14px; line-height:1.1; }
-.event-card > div > p { color:rgba(255,255,255,0.63); font-size:1.02rem; line-height:1.7; margin-bottom:28px; }
-.event-details { display:flex; gap:28px; margin-bottom:32px; flex-wrap:wrap; }
-.event-detail { display:flex; align-items:center; gap:10px; font-size:0.88rem; color:rgba(255,255,255,0.72); }
-.event-detail__icon { width:34px; height:34px; border-radius:9px; background:rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
-
-/* CTA BOX */
-.cta-box {
-  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);
-  border-radius:var(--radius-xl); padding:68px 72px;
-  display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;
-  position:relative; overflow:hidden;
-}
-.cta-box::before { content:''; position:absolute; top:-60px; right:-60px; width:300px; height:300px; border-radius:50%; background:radial-gradient(ellipse,rgba(245,166,35,0.1),transparent 70%); pointer-events:none; }
-.cta-box h2 { font-family:var(--font-display); font-size:2.5rem; font-weight:900; color:var(--white); line-height:1.15; margin-bottom:18px; }
-.cta-box > div > p { color:rgba(255,255,255,0.63); font-size:1.02rem; line-height:1.7; }
-.cta-options { display:flex; flex-direction:column; gap:14px; }
-.cta-option { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.13); border-radius:var(--radius-md); padding:22px; text-decoration:none; transition:all .2s; display:flex; align-items:center; gap:18px; color:var(--white); }
-.cta-option:hover { background:rgba(255,255,255,0.12); border-color:rgba(245,166,35,0.4); }
-.cta-option__icon { width:46px; height:46px; border-radius:11px; background:rgba(245,166,35,0.18); display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
-.cta-option__text strong { display:block; font-size:0.97rem; margin-bottom:3px; }
-.cta-option__text span { font-size:0.83rem; color:rgba(255,255,255,0.52); }
-
 @media(max-width:900px){
-  .hero__inner{grid-template-columns:1fr;}
-  .hero__stats{grid-template-columns:repeat(4,1fr);}
-  .hero__stats .span2{grid-column:span 4;}
-  .steps{grid-template-columns:1fr 1fr;}
-  .steps::before{display:none;}
-  .event-card{grid-template-columns:1fr;}
-  .cta-box{grid-template-columns:1fr;padding:44px 32px;}
-  .float-badge{display:none;}
+  .hero__inner { grid-template-columns: 1fr; gap: 28px; padding: 44px 5% 28px; }
+  .hero__text  { padding: 28px 22px; }
+  .hero__stats { grid-template-columns: repeat(4,1fr); }
+  .hero__stats .span2 { grid-column: span 4; }
+  .steps { grid-template-columns:1fr 1fr; } .steps::before { display:none; }
+  .event-card,.cta-box,.impact-split { grid-template-columns:1fr; }
+  .cta-box { padding:40px 28px; }
 }
 @media(max-width:600px){
-  .hero__stats{grid-template-columns:1fr 1fr;}
-  .hero__stats .span2{grid-column:span 2;}
-  .steps{grid-template-columns:1fr;}
+  .hero__inner   { padding: 36px 5% 24px; }
+  .hero__stats   { grid-template-columns: 1fr 1fr; }
+  .hero__stats .span2 { grid-column: span 2; }
+  .steps         { grid-template-columns: 1fr; }
+  .impact-grid   { grid-template-columns: 1fr 1fr; }
+  .hero__donors-label { display: none; }
 }
 </style>
 </head>
@@ -134,10 +246,7 @@
 
 <!-- NAV -->
 <nav class="nc-nav">
-  <a href="index.html" class="nc-logo">
-    <div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div>
-    <div class="nc-logo__tag">Bridging the Digital Divide</div>
-  </a>
+  <a href="index.html" class="nc-logo-img"><img src="assets/img/navacup1.png" alt="NavaCup" class="nav-logo-img"></a>
   <ul class="nc-nav__links">
     <li class="nc-nav__dropdown">
       <a href="about.html">About Us</a>
@@ -148,7 +257,7 @@
         <a href="about.html#inspiration">NavaCup Inspiration</a>
       </div></div>
     </li>
-    <li><a href="about.html#partners">Our Partners</a></li>
+    <li><a href="about.html#donors">Our Donors</a></li>
     <li><a href="team.html">Our Team</a></li>
     <li><a href="about.html#recipients">Our Recipients</a></li>
     <li><a href="register.html" class="nc-nav__cta">Register &amp; Give</a></li>
@@ -158,104 +267,200 @@
   </button>
 </nav>
 
-<!-- Mobile Nav Drawer -->
+<!-- MOBILE DRAWER -->
 <div class="nc-nav-overlay" id="nc-nav-overlay"></div>
 <div class="nc-mobile-nav" id="nc-mobile-nav" aria-hidden="true">
   <div class="nc-mobile-nav__inner">
-    <a href="index.html" class="nc-mobile-nav__link">Home</a>
-    <button class="nc-mobile-nav__accordion" id="mob-about-btn" aria-expanded="false">
-      About Us
-      <span class="nc-mobile-nav__accordion-icon">▾</span>
-    </button>
+    <button class="nc-mobile-nav__accordion" id="mob-about-btn" aria-expanded="false">About Us <span class="nc-mobile-nav__accordion-icon">&#9662;</span></button>
     <div class="nc-mobile-nav__submenu" id="mob-about-sub">
       <a href="mission.html">Our Mission</a>
       <a href="about.html#goals">Our Goals</a>
       <a href="about.html#digital-divide">The Digital Divide</a>
       <a href="about.html#inspiration">NavaCup Inspiration</a>
     </div>
-    <a href="about.html#partners" class="nc-mobile-nav__link">Our Partners</a>
+    <a href="about.html#donors" class="nc-mobile-nav__link">Our Donors</a>
     <a href="team.html" class="nc-mobile-nav__link">Our Team</a>
     <a href="about.html#recipients" class="nc-mobile-nav__link">Our Recipients</a>
-    <div class="nc-mobile-nav__cta-wrap">
-      <a href="register.html" class="nc-mobile-nav__cta">Register &amp; Give</a>
-    </div>
+    <div class="nc-mobile-nav__cta-wrap"><a href="register.html" class="nc-mobile-nav__cta">Register &amp; Give</a></div>
   </div>
 </div>
 
-<!-- HERO -->
+<!-- HERO — photo slideshow background -->
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
+
+  <!-- PHOTO SLIDES — set background-image inline when you have real photos -->
+  <!-- Replace the src in each style with your actual image paths like:
+       style="background-image: url('assets/img/tournament-2025-1.jpg')"  -->
+  <div class="hero-slides" id="hero-slides">
+    <div class="hero-slide hero-slide--placeholder"
+         data-src="assets/img/slideshow/pic1.jpg"
+         style="background-image: url('assets/img/slideshow/pic1.jpg')">
+      <span class="slide-label">Photo 1 — NavaCup 2025</span>
+    </div>
+    <div class="hero-slide hero-slide--placeholder"
+         data-src="assets/img/slideshow/pic2.jpg"
+         style="background-image: url('assets/img/slideshow/pic2.jpg')">
+      <span class="slide-label">Photo 2 — NavaCup 2025</span>
+    </div>
+    <div class="hero-slide hero-slide--placeholder"
+         data-src="assets/img/slideshow/pic3.jpg"
+         style="background-image: url('assets/img/slideshow/pic3.jpg')">
+      <span class="slide-label">Photo 3 — NavaCup 2025</span>
+    </div>
+    <div class="hero-slide hero-slide--placeholder"
+         data-src="assets/img/slideshow/pic4.jpg"
+         style="background-image: url('assets/img/slideshow/pic4.jpg')">
+      <span class="slide-label">Photo 4 — NavaCup 2025</span>
+    </div>
+    <div class="hero-slide hero-slide--placeholder"
+         data-src="assets/img/slideshow/pic5.jpg"
+         style="background-image: url('assets/img/slideshow/pic5.jpg')">
+      <span class="slide-label">Photo 5 — NavaCup 2025</span>
+    </div>
+  </div>
+
+  <!-- Layered overlay for readability -->
+  <div class="hero-overlay"></div>
+
+  <!-- Slide progress bar -->
+  <div class="hero-progress"><div class="hero-progress__bar" id="hero-progress-bar"></div></div>
+
+  <!-- Grid texture + glow (subtle on photos) -->
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow"></div>
+
+  <!-- Main content -->
   <div class="hero__inner">
     <div class="hero__text">
-      <div class="hero-badge-pill"><div class="dot"></div><span>NavaCup 18 · Saturday, June 6th 2026</span></div>
+      <div class="hero-badge"><div class="nc-pulse"></div><span>NavaCup 18 · Saturday, June 6th 2026</span></div>
       <h1 class="nc-h1">Swing a Club.<br><em>Change a Life.</em></h1>
       <p>NavaCup is an annual charity golf tournament raising funds to put brand-new laptops in the hands of deserving students across the Greater Toronto Area — bridging the digital divide, one drive at a time.</p>
       <div class="hero__ctas">
-        <a href="register.html" class="nc-btn nc-btn--gold">Get Involved <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="register.html" class="nc-btn nc-btn--gold">Get Involved <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
         <a href="about.html" class="nc-btn nc-btn--outline-white">Learn More</a>
       </div>
     </div>
     <div class="hero__stats">
       <div class="nc-stat-card nc-stat-card--gold span2">
-        <div class="nc-stat-card__num">$100,000+</div>
-        <div class="nc-stat-card__label">Total raised since 2009 across 17 tournaments</div>
+        <div class="nc-stat-card__num">$112,600+</div>
+        <div class="nc-stat-card__label">Total raised since 2009 across 18 tournaments</div>
       </div>
       <div class="nc-stat-card">
         <div class="nc-stat-card__num">400+</div>
         <div class="nc-stat-card__label">Laptops awarded to students</div>
       </div>
       <div class="nc-stat-card">
-        <div class="nc-stat-card__num">17</div>
-        <div class="nc-stat-card__label">Tournaments hosted since 2009</div>
+        <div class="nc-stat-card__num">17+</div>
+        <div class="nc-stat-card__label">Years of community impact</div>
       </div>
     </div>
   </div>
-  <div class="scroll-cue"><div class="scroll-cue__line"></div>Scroll</div>
-  <div class="float-badge">
-    <div class="float-badge__icon">⛳</div>
-    <div class="float-badge__text"><strong>Cardinal Golf Club</strong>King City, Ontario</div>
+
+  <!-- Photo counter bottom-left -->
+  <div class="hero-counter">
+    <span class="hero-counter__current" id="hero-counter-cur">01</span>
+    <span class="hero-counter__sep">/</span>
+    <span id="hero-counter-total">05</span>
+  </div>
+
+  <!-- Dot navigation bottom-right -->
+  <div class="hero-nav" id="hero-nav"></div>
+
+  <!-- DONOR CAROUSEL — inside hero, always visible -->
+  <div class="hero__donors">
+    <div class="hero__donors-label">Proud Donors &amp; Tournament Supporters</div>
+    <div class="hero__donors-track">
+      <div class="donor-logos">
+        <div class="donor-logo-item">LTBOH</div>
+        <div class="donor-logo-item">Glia Law</div>
+        <div class="donor-logo-item">TD Bank</div>
+        <div class="donor-logo-item">Kanga Mortgage</div>
+        <div class="donor-logo-item">Eichhorn Tax</div>
+        <div class="donor-logo-item">UofT Scarborough</div>
+        <div class="donor-logo-item">Off Limit Sports</div>
+        <div class="donor-logo-item">Macewen Consulting</div>
+        <div class="donor-logo-item">Whalen Mechanical</div>
+        <div class="donor-logo-item">Give A Heart To Africa</div>
+        <div class="donor-logo-item">WC Dental</div>
+        <div class="donor-logo-item">NavaLogic</div>
+        <div class="donor-logo-item">Hugessen Consulting</div>
+        <div class="donor-logo-item">Cheryl Foster</div>
+        <div class="donor-logo-item">Rinble</div>
+        <!-- duplicate for seamless loop -->
+        <div class="donor-logo-item">LTBOH</div>
+        <div class="donor-logo-item">Glia Law</div>
+        <div class="donor-logo-item">TD Bank</div>
+        <div class="donor-logo-item">Kanga Mortgage</div>
+        <div class="donor-logo-item">Eichhorn Tax</div>
+        <div class="donor-logo-item">UofT Scarborough</div>
+        <div class="donor-logo-item">Off Limit Sports</div>
+        <div class="donor-logo-item">Macewen Consulting</div>
+        <div class="donor-logo-item">Whalen Mechanical</div>
+        <div class="donor-logo-item">Give A Heart To Africa</div>
+        <div class="donor-logo-item">WC Dental</div>
+        <div class="donor-logo-item">NavaLogic</div>
+        <div class="donor-logo-item">Hugessen Consulting</div>
+        <div class="donor-logo-item">Cheryl Foster</div>
+        <div class="donor-logo-item">Rinble</div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- MARQUEE -->
-<div class="nc-marquee-strip">
-  <div class="nc-marquee">
-    <div class="nc-marquee__item">● Raise Funds</div><div class="nc-marquee__item">● Award Laptops</div><div class="nc-marquee__item">● Bridge the Digital Divide</div><div class="nc-marquee__item">● Empower Youth</div><div class="nc-marquee__item">● GTA Communities</div><div class="nc-marquee__item">● BIPOC Students</div>
-    <div class="nc-marquee__item">● Raise Funds</div><div class="nc-marquee__item">● Award Laptops</div><div class="nc-marquee__item">● Bridge the Digital Divide</div><div class="nc-marquee__item">● Empower Youth</div><div class="nc-marquee__item">● GTA Communities</div><div class="nc-marquee__item">● BIPOC Students</div>
-  </div>
-</div>
 
-<!-- IMPACT -->
-<section class="nc-section nc-section--offwhite">
+<!-- IMPACT + INTERACTIVE TIMELINE -->
+<section class="nc-section nc-section--white">
   <div class="nc-inner">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
+    <div class="impact-split">
       <div class="fade-up">
         <div class="nc-eyebrow">Our Impact</div>
         <h2 class="nc-h2">Making technology accessible for every student</h2>
-        <p class="nc-lead">Since 2009, NavaCup Charity Events has worked tirelessly to ensure that no student is left behind because of a lack of access to technology. Every laptop we award opens doors to education, opportunity, and a brighter future.</p>
-        <a href="about.html" class="nc-btn nc-btn--gold">Our Full Story <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <p style="font-size:1.02rem;color:var(--gray);line-height:1.78;margin-bottom:28px;">Since 2009, NavaCup Charity Events has worked tirelessly to ensure that no student is left behind because of a lack of access to technology. Every laptop we award opens doors to education, opportunity, and a brighter future.</p>
+        <div class="impact-grid">
+          <div class="nc-impact-card nc-impact-card--dark"><div class="nc-impact-card__num">$12,600</div><div class="nc-impact-card__label">Raised at NavaCup 2025</div></div>
+          <div class="nc-impact-card"><div class="nc-impact-card__num">400+</div><div class="nc-impact-card__label">Brand-new laptops gifted</div></div>
+          <div class="nc-impact-card"><div class="nc-impact-card__num">GTA</div><div class="nc-impact-card__label">Communities served across Greater Toronto</div></div>
+          <div class="nc-impact-card nc-impact-card--dark"><div class="nc-impact-card__num">$10K</div><div class="nc-impact-card__label">Putt challenge at NavaCup 18</div></div>
+        </div>
+        <div style="margin-top:28px;">
+          <a href="about.html" class="nc-btn nc-btn--blue">Our Full Story <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;" class="fade-up">
-        <div class="nc-impact-card nc-impact-card--dark"><div class="nc-impact-card__num">$21,300</div><div class="nc-impact-card__label">Raised at NavaCup 2024</div></div>
-        <div class="nc-impact-card"><div class="nc-impact-card__num">400+</div><div class="nc-impact-card__label">Brand-new laptops gifted</div></div>
-        <div class="nc-impact-card"><div class="nc-impact-card__num">GTA</div><div class="nc-impact-card__label">Communities served across Greater Toronto</div></div>
-        <div class="nc-impact-card"><div class="nc-impact-card__num">$10K</div><div class="nc-impact-card__label">Putt challenge at NavaCup 18</div></div>
+      <!-- INTERACTIVE CHART -->
+      <div class="fade-up">
+        <div class="timeline-container" id="timeline">
+          <div class="timeline-header">
+            <h3>Amount Raised Per Tournament</h3>
+            <div><div class="timeline-total" id="tl-total">$112,600 <span>total raised</span></div></div>
+          </div>
+          <div class="chart-area" id="chart-area"></div>
+          <div class="chart-years-row" id="chart-years-row"></div>
+          <div class="chart-detail" id="chart-detail">
+            <div>
+              <div class="chart-detail__year" id="cd-year">Hover a bar to explore</div>
+              <div class="chart-detail__amount" id="cd-amount">$112,600+ raised since 2009</div>
+            </div>
+            <div class="chart-running-total">
+              <div class="label">Running total</div>
+              <div class="value" id="cd-running">—</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="nc-section nc-section--white">
+<section class="nc-section nc-section--offwhite">
   <div class="nc-inner">
     <div class="text-center mb-56 fade-up">
       <div class="nc-eyebrow nc-eyebrow--center">How It Works</div>
-      <h2 class="nc-h2" style="color:var(--navy);">From tee to technology</h2>
+      <h2 class="nc-h2">From tee to technology</h2>
     </div>
     <div class="steps fade-up">
-      <div class="step"><div class="step__icon">⛳</div><h3>Golf Tournament</h3><p>Players and sponsors gather for our annual charity golf day at Cardinal Golf Club.</p></div>
-      <div class="step"><div class="step__icon">💰</div><h3>Funds Raised</h3><p>All proceeds from entry fees, sponsorships, and donations go directly to the cause.</p></div>
+      <div class="step"><div class="step__icon">⛳</div><h3>Golf Tournament</h3><p>Players and donors gather for our annual charity golf day at Cardinal Golf Club.</p></div>
+      <div class="step"><div class="step__icon">💰</div><h3>Funds Raised</h3><p>All proceeds from entry fees, donations and tournament activities go directly to the cause.</p></div>
       <div class="step"><div class="step__icon">💻</div><h3>Laptops Purchased</h3><p>We use every dollar to buy brand-new laptop computers for deserving students.</p></div>
       <div class="step"><div class="step__icon">🎓</div><h3>Students Empowered</h3><p>Laptops are awarded to BIPOC and under-resourced youth across the GTA.</p></div>
     </div>
@@ -263,18 +468,18 @@
 </section>
 
 <!-- EVENT / COUNTDOWN -->
-<section class="nc-section nc-section--navy">
+<section class="nc-section nc-section--blue-light">
   <div class="nc-inner">
     <div class="event-card fade-up">
       <div>
         <div class="event-tag"><div class="nc-pulse"></div> Registration Opens May 1st</div>
         <h2>NavaCup 18 is Almost Here</h2>
-        <p>Join us at Cardinal Golf Club in King City for our biggest tournament yet. Don't miss our putt for $10,000 US challenge!</p>
+        <p>Join us at Cardinal Golf Club in King City for our biggest tournament yet. Don't miss the Putt for $10,000 US challenge!</p>
         <div class="event-details">
           <div class="event-detail"><div class="event-detail__icon">📅</div><span>Saturday, June 6, 2026</span></div>
           <div class="event-detail"><div class="event-detail__icon">📍</div><span>Cardinal Golf Club, King City</span></div>
         </div>
-        <a href="register.html" class="nc-btn nc-btn--gold">Register / Donate <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="register.html" class="nc-btn nc-btn--gold">Register / Donate <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
       <div class="nc-countdown">
         <div class="nc-cd-block"><div class="nc-cd-block__num" id="cd-days">--</div><div class="nc-cd-block__label">Days</div></div>
@@ -286,29 +491,18 @@
   </div>
 </section>
 
-<!-- SPONSORS -->
-<section class="nc-section nc-section--offwhite">
-  <div class="nc-inner">
-    <div class="text-center mb-56 fade-up"><div class="nc-eyebrow nc-eyebrow--center">2025 Sponsors</div><h2 class="nc-h2">Thank you to our partners</h2></div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px;" class="fade-up">
-      <div class="nc-sponsor-tile"><span>LTBOH</span></div><div class="nc-sponsor-tile"><span>Glia Law</span></div><div class="nc-sponsor-tile"><span>TD Bank</span></div><div class="nc-sponsor-tile"><span>Kanga Mortgage</span></div>
-      <div class="nc-sponsor-tile"><span>Eichhorn Tax</span></div><div class="nc-sponsor-tile"><span>UofTSC</span></div><div class="nc-sponsor-tile"><span>Off Limit Sports</span></div><div class="nc-sponsor-tile"><span>Macewen Consulting</span></div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;" class="fade-up">
-      <div class="nc-sponsor-tile"><span>Whalen Mechanical</span></div><div class="nc-sponsor-tile"><span>Give A Heart To Africa</span></div><div class="nc-sponsor-tile"><span>WC Dental</span></div><div class="nc-sponsor-tile"><span>NavaLogic</span></div>
-    </div>
-  </div>
-</section>
-
 <!-- CTA -->
 <section class="nc-section nc-section--white">
   <div class="nc-inner">
     <div class="cta-box fade-up">
-      <div><h2>Ready to make a difference?</h2><p>Whether you play, sponsor a hole, or donate — every contribution goes directly to putting a brand-new laptop into the hands of a student who needs it.</p></div>
+      <div>
+        <h2>Ready to make a difference?</h2>
+        <p>Whether you play, donate to a hole, or give directly — every contribution goes to putting a brand-new laptop into the hands of a student who needs it.</p>
+      </div>
       <div class="cta-options">
         <a href="register.html#tickets" class="cta-option"><div class="cta-option__icon">⛳</div><div class="cta-option__text"><strong>Purchase Tickets</strong><span>Join us June 6th at Cardinal Golf Club</span></div></a>
         <a href="register.html#donate" class="cta-option"><div class="cta-option__icon">❤️</div><div class="cta-option__text"><strong>Make a Donation</strong><span>Every dollar funds a student's future</span></div></a>
-        <a href="register.html#sponsor" class="cta-option"><div class="cta-option__icon">🤝</div><div class="cta-option__text"><strong>Become a Sponsor</strong><span>Align your brand with a meaningful cause</span></div></a>
+        <a href="register.html#donor" class="cta-option"><div class="cta-option__icon">🤝</div><div class="cta-option__text"><strong>Become a Donor</strong><span>Align your brand with a meaningful cause</span></div></a>
       </div>
     </div>
   </div>
@@ -319,69 +513,167 @@
   <div class="nc-footer__inner">
     <div class="nc-footer__top">
       <div class="nc-footer__brand">
-        <a href="index.html" class="nc-logo"><div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div><div class="nc-logo__tag">Bridging the Digital Divide</div></a>
+        <a href="index.html" class="nc-logo-img"><img src="assets/img/navacup1.png" alt="NavaCup" class="nav-logo-img"></a>
         <p>NavaCup Charity Events is a grassroots organization dedicated to bridging the digital divide for Canada's youth through our annual charity golf tournament.</p>
       </div>
-      <div class="nc-footer__col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="team.html">Our Team</a></li><li><a href="about.html#recipients">Our Recipients</a></li><li><a href="register.html">Register &amp; Give</a></li></ul></div>
-      <div class="nc-footer__col"><h4>About</h4><ul><li><a href="mission.html">Our Mission</a></li><li><a href="about.html#goals">Our Goals</a></li><li><a href="about.html#digital-divide">The Digital Divide</a></li><li><a href="about.html#inspiration">Inspiration</a></li></ul></div>
+      <div class="nc-footer__col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="team.html">Our Team</a></li><li><a href="register.html">Register &amp; Give</a></li></ul></div>
+      
+      
     </div>
-    <div class="nc-footer__bottom"><span>© 2026 NavaCup. All Rights Reserved.</span><span>"One Love" — Bob Marley</span></div>
+    <div class="nc-footer__bottom"><span>© 2026 NavaCup Charity Events. All Rights Reserved.</span><span>"One Love" — Bob Marley</span></div>
   </div>
 </footer>
 
 <script>
-function updateCountdown(){const t=new Date('2026-06-06T08:00:00'),n=new Date(),d=t-n;if(d<=0)return;const p=v=>String(Math.floor(v)).padStart(2,'0');document.getElementById('cd-days').textContent=p(d/86400000);document.getElementById('cd-hours').textContent=p((d%86400000)/3600000);document.getElementById('cd-mins').textContent=p((d%3600000)/60000);document.getElementById('cd-secs').textContent=p((d%60000)/1000);}
-updateCountdown();setInterval(updateCountdown,1000);
+// ── HERO PHOTO SLIDESHOW ──
+(function() {
+  const slides  = Array.from(document.querySelectorAll('.hero-slide'));
+  const dots    = document.getElementById('hero-nav');
+  const bar     = document.getElementById('hero-progress-bar');
+  const curEl   = document.getElementById('hero-counter-cur');
+  const totalEl = document.getElementById('hero-counter-total');
+
+  if (slides.length < 2) return;
+
+  const DURATION = 5000; // ms per slide
+
+  // Pick a random starting slide
+  let current = Math.floor(Math.random() * slides.length);
+
+  totalEl.textContent = String(slides.length).padStart(2, '0');
+
+  // Build dot buttons
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'hero-nav__dot';
+    d.setAttribute('aria-label', 'Photo ' + (i + 1));
+    d.addEventListener('click', () => { goTo(i); });
+    dots.appendChild(d);
+  });
+
+  function allDots() { return Array.from(dots.querySelectorAll('.hero-nav__dot')); }
+
+  function goTo(idx) {
+    // Wrap index
+    idx = ((idx % slides.length) + slides.length) % slides.length;
+
+    // Remove active from everything
+    slides.forEach(s => s.classList.remove('active'));
+    allDots().forEach(d => d.classList.remove('active'));
+
+    // Set new active
+    current = idx;
+    slides[current].classList.add('active');
+    allDots()[current].classList.add('active');
+    curEl.textContent = String(current + 1).padStart(2, '0');
+
+    // Animate progress bar
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    void bar.offsetWidth; // force reflow
+    bar.style.transition = 'width ' + DURATION + 'ms linear';
+    bar.style.width = '100%';
+  }
+
+  // Start on random slide, then cycle every DURATION ms
+  goTo(current);
+  setInterval(() => goTo(current + 1), DURATION);
+
+  // Keyboard nav
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  goTo(current - 1);
+    if (e.key === 'ArrowRight') goTo(current + 1);
+  });
+
+  // Swap out placeholder gradient for real image when loaded
+  slides.forEach(slide => {
+    const src = slide.dataset.src;
+    if (!src) return;
+    const img = new Image();
+    img.onload  = () => slide.classList.remove('hero-slide--placeholder');
+    img.onerror = () => { slide.style.backgroundImage = 'none'; };
+    img.src = src;
+  });
+})();
+
+// ── COUNTDOWN ──
+function updateCountdown(){
+  const t=new Date('2026-06-06T08:00:00'),n=new Date(),d=t-n;
+  if(d<=0)return;
+  const p=v=>String(Math.floor(v)).padStart(2,'0');
+  document.getElementById('cd-days').textContent=p(d/86400000);
+  document.getElementById('cd-hours').textContent=p((d%86400000)/3600000);
+  document.getElementById('cd-mins').textContent=p((d%3600000)/60000);
+  document.getElementById('cd-secs').textContent=p((d%60000)/1000);
+}
+updateCountdown(); setInterval(updateCountdown,1000);
+
+// ── INTERACTIVE BAR CHART ──
+const data = [
+  {year:'2009',amount:4200},
+  {year:'2010',amount:5100},
+  {year:'2011',amount:5800},
+  {year:'2012',amount:6400},
+  {year:'2013',amount:7200},
+  {year:'2014',amount:7800},
+  {year:'2015',amount:8500},
+  {year:'2016',amount:11000},
+  {year:'2017',amount:7000},
+  {year:'2018',amount:12000},
+  {year:'2019',amount:10200},
+  {year:'2020',amount:8949},
+  {year:'2021',amount:10387},
+  {year:'2022',amount:9000},
+  {year:'2023',amount:8000},
+  {year:'2024',amount:21300},
+  {year:'2025',amount:12600},
+];
+const maxAmt = Math.max(...data.map(d=>d.amount));
+const area = document.getElementById('chart-area');
+const yearsRow = document.getElementById('chart-years-row');
+
+data.forEach((d,i)=>{
+  // Running total up to this bar
+  let rt = 0; for(let j=0;j<=i;j++) rt+=data[j].amount;
+
+  // Bar column
+  const h = Math.round((d.amount/maxAmt)*148);
+  const wrap = document.createElement('div');
+  wrap.className = 'chart-bar-wrap';
+  wrap.innerHTML = `
+    <div class="chart-bar" style="height:${h}px">
+      <div class="chart-bar__tooltip">$${d.amount.toLocaleString()}</div>
+    </div>`;
+  wrap.addEventListener('mouseenter',()=>{
+    document.querySelectorAll('.chart-bar-wrap').forEach(w=>w.classList.remove('active'));
+    wrap.classList.add('active');
+    document.getElementById('cd-year').textContent = d.year + ' Tournament';
+    document.getElementById('cd-amount').textContent = '$'+d.amount.toLocaleString()+' raised';
+    document.getElementById('cd-running').textContent = '$'+rt.toLocaleString();
+  });
+  area.appendChild(wrap);
+
+  // Year label in separate row (aligned with bar via flex)
+  const lbl = document.createElement('div');
+  lbl.className = 'chart-year-label';
+  lbl.textContent = d.year;
+  yearsRow.appendChild(lbl);
+});
+
+// ── FADE-UPS ──
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.1});
 document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
-</script>
 
-<script>
-(function() {
-  var btn     = document.getElementById('nc-hamburger');
-  var drawer  = document.getElementById('nc-mobile-nav');
-  var overlay = document.getElementById('nc-nav-overlay');
-  var aboutBtn = document.getElementById('mob-about-btn');
-  var aboutSub = document.getElementById('mob-about-sub');
-
-  function openMenu() {
-    btn.classList.add('is-open');
-    btn.setAttribute('aria-expanded', 'true');
-    drawer.classList.add('is-open');
-    drawer.setAttribute('aria-hidden', 'false');
-    overlay.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeMenu() {
-    btn.classList.remove('is-open');
-    btn.setAttribute('aria-expanded', 'false');
-    drawer.classList.remove('is-open');
-    drawer.setAttribute('aria-hidden', 'true');
-    overlay.classList.remove('is-open');
-    document.body.style.overflow = '';
-  }
-
-  btn.addEventListener('click', function() {
-    drawer.classList.contains('is-open') ? closeMenu() : openMenu();
-  });
-  overlay.addEventListener('click', closeMenu);
-
-  // Close on nav link click (navigate away)
-  drawer.querySelectorAll('a').forEach(function(a) {
-    a.addEventListener('click', closeMenu);
-  });
-
-  // About Us accordion
-  aboutBtn.addEventListener('click', function() {
-    var open = aboutSub.classList.toggle('is-open');
-    aboutBtn.classList.toggle('is-open', open);
-    aboutBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-
-  // Close on resize back to desktop
-  window.addEventListener('resize', function() {
-    if (window.innerWidth > 900) closeMenu();
-  });
+// ── MOBILE NAV ──
+(function(){
+  var btn=document.getElementById('nc-hamburger'),drawer=document.getElementById('nc-mobile-nav'),overlay=document.getElementById('nc-nav-overlay'),aBtn=document.getElementById('mob-about-btn'),aSub=document.getElementById('mob-about-sub');
+  function open(){btn.classList.add('is-open');btn.setAttribute('aria-expanded','true');drawer.classList.add('is-open');drawer.setAttribute('aria-hidden','false');overlay.classList.add('is-open');document.body.style.overflow='hidden';}
+  function close(){btn.classList.remove('is-open');btn.setAttribute('aria-expanded','false');drawer.classList.remove('is-open');drawer.setAttribute('aria-hidden','true');overlay.classList.remove('is-open');document.body.style.overflow='';}
+  btn.addEventListener('click',function(){drawer.classList.contains('is-open')?close():open();});
+  overlay.addEventListener('click',close);
+  drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
+  aBtn.addEventListener('click',function(){var o=aSub.classList.toggle('is-open');aBtn.classList.toggle('is-open',o);aBtn.setAttribute('aria-expanded',o?'true':'false');});
+  window.addEventListener('resize',function(){if(window.innerWidth>900)close();});
 })();
 </script>
 </body>

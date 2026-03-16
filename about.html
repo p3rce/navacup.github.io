@@ -68,10 +68,7 @@
 <body>
 
 <nav class="nc-nav">
-  <a href="index.html" class="nc-logo">
-    <div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div>
-    <div class="nc-logo__tag">Bridging the Digital Divide</div>
-  </a>
+  <a href="index.html" class="nc-logo-img"><img src="assets/img/navacup1.png" alt="NavaCup" class="nav-logo-img"></a>
   <ul class="nc-nav__links">
     <li class="nc-nav__dropdown">
       <a href="about.html">About Us</a>
@@ -82,7 +79,7 @@
         <a href="#inspiration">NavaCup Inspiration</a>
       </div></div>
     </li>
-    <li><a href="#partners">Our Partners</a></li>
+    <li><a href="#donors">Our Donors</a></li>
     <li><a href="team.html">Our Team</a></li>
     <li><a href="#recipients">Our Recipients</a></li>
     <li><a href="register.html" class="nc-nav__cta">Register &amp; Give</a></li>
@@ -92,34 +89,27 @@
   </button>
 </nav>
 
-<!-- Mobile Nav Drawer -->
 <div class="nc-nav-overlay" id="nc-nav-overlay"></div>
 <div class="nc-mobile-nav" id="nc-mobile-nav" aria-hidden="true">
   <div class="nc-mobile-nav__inner">
-    <a href="index.html" class="nc-mobile-nav__link">Home</a>
-    <button class="nc-mobile-nav__accordion" id="mob-about-btn" aria-expanded="false">
-      About Us
-      <span class="nc-mobile-nav__accordion-icon">▾</span>
-    </button>
+    <button class="nc-mobile-nav__accordion" id="mob-about-btn" aria-expanded="false">About Us <span class="nc-mobile-nav__accordion-icon">&#9662;</span></button>
     <div class="nc-mobile-nav__submenu" id="mob-about-sub">
       <a href="mission.html">Our Mission</a>
       <a href="about.html#goals">Our Goals</a>
       <a href="about.html#digital-divide">The Digital Divide</a>
       <a href="about.html#inspiration">NavaCup Inspiration</a>
     </div>
-    <a href="about.html#partners" class="nc-mobile-nav__link">Our Partners</a>
+    <a href="about.html#donors" class="nc-mobile-nav__link">Our Donors</a>
     <a href="team.html" class="nc-mobile-nav__link">Our Team</a>
     <a href="about.html#recipients" class="nc-mobile-nav__link">Our Recipients</a>
-    <div class="nc-mobile-nav__cta-wrap">
-      <a href="register.html" class="nc-mobile-nav__cta">Register &amp; Give</a>
-    </div>
+    <div class="nc-mobile-nav__cta-wrap"><a href="register.html" class="nc-mobile-nav__cta">Register &amp; Give</a></div>
   </div>
 </div>
 
 <div class="nc-page-hero">
   <div class="nc-page-hero__inner">
-    <div class="nc-breadcrumb"><a href="index.html">Home</a><span class="nc-breadcrumb__sep">›</span><span class="nc-breadcrumb__current">About Us</span></div>
-    <div class="nc-eyebrow">About NavaCup</div>
+    <!-- <div class="nc-breadcrumb"><a href="index.html">Home</a><span class="nc-breadcrumb__sep">›</span><span class="nc-breadcrumb__current">About Us</span></div> -->
+    <!-- <div class="nc-eyebrow">About NavaCup</div> -->
     <h1 class="nc-h1">More than a golf<br><em>tournament</em></h1>
     <p class="nc-lead nc-lead--white">NavaCup is a movement dedicated to bridging the digital divide among Canada's youth — one laptop, one student, one life at a time.</p>
   </div>
@@ -132,7 +122,7 @@
     <a href="#digital-divide">The Digital Divide</a>
     <a href="#inspiration">Inspiration</a>
     <a href="#recipients">Recipients</a>
-    <a href="#partners">Partners</a>
+    <a href="#donors">Donors</a>
   </div>
 </div>
 
@@ -173,19 +163,20 @@
 <section class="nc-section nc-section--white" id="digital-divide">
   <div class="nc-inner">
     <div class="dd-layout">
-      <div class="dd-text fade-up">
+              <div class="dd-text fade-up">
         <div class="nc-eyebrow">The Digital Divide</div>
         <h2 class="nc-h2">A gap that cannot be ignored</h2>
-        <p>Canadians are making greater use of the Internet, but a digital divide persists. Almost three-quarters of Canadians aged 16 and older went online for personal reasons — but access is far from equal.</p>
-        <p>People in urban areas were more likely to use the Internet than those in smaller towns. <strong>Only 65% of residents in rural areas accessed the Internet</strong>, well below the national average.</p>
-        <p>Among those born in Canada, 75% used the Internet, compared with 66% of those born elsewhere. Among recent immigrants, usage was even lower — particularly those who arrived in the last 10 years.</p>
-        <div class="source-note">Source: Statistics Canada, The Daily — Survey Number 4432. <a href="http://www.statcan.gc.ca" target="_blank">www.statcan.gc.ca</a></div>
+        <p>According to Statistics Canada's most recent Canadian Internet Use Survey (2022), internet use among Canadians aged 15 and older reached <strong>95%</strong> — yet significant gaps remain. Cost, geography, and income continue to leave millions behind.</p>
+        <p>Almost half of households earning under $30,000 per year lacked high-speed internet access. In a 2023 survey of Toronto residents without home internet, <strong>29% said it affected their access to government services</strong>, 26% said financial services, and 24% said education.</p>
+        <p>A 2023 Auditor General report concluded that progress on high-speed internet access continues to lag for those in rural, remote, and First Nations communities — making access to devices like laptops even more critical.</p>
+        <div class="source-note">Sources: Statistics Canada, Canadian Internet Use Survey 2022 (Survey #4432); The Dais, Toronto Digital Divide Survey 2023; IRPP Digital Divide Report 2024.</div>
       </div>
       <div class="dd-stats fade-up">
-        <div class="dd-stat"><div class="dd-stat-num">91%</div><div class="dd-stat-desc">Top income quintile Internet usage — nearly double the lowest quintile</div></div>
-        <div class="dd-stat"><div class="dd-stat-num">65%</div><div class="dd-stat-desc">Rural residents with Internet access, well below the national average</div></div>
-        <div class="dd-stat"><div class="dd-stat-num">84%</div><div class="dd-stat-desc">Post-secondary educated individuals online vs 58% with less education</div></div>
-        <div class="dd-stat"><div class="dd-stat-num">66%</div><div class="dd-stat-desc">Foreign-born Canadians online vs 75% of Canadian-born residents</div></div>
+        <div class="dd-stat"><div class="dd-stat-num">95%</div><div class="dd-stat-desc">Canadians 15+ online in 2022 — yet 5% still excluded entirely (Stats Can CIUS 2022)</div></div>
+        <div class="dd-stat"><div class="dd-stat-num">50%</div><div class="dd-stat-desc">Of low-income households (under $30K/yr) lacked high-speed home internet in 2018</div></div>
+        <div class="dd-stat"><div class="dd-stat-num">29%</div><div class="dd-stat-desc">Of Toronto residents without internet said it impacted access to government services (2023)</div></div>
+        <div class="dd-stat"><div class="dd-stat-num">87%</div><div class="dd-stat-desc">Of connected Canadians had 50 Mbps+ speeds — but rural and remote areas still lag far behind</div></div>
+      </div>
       </div>
     </div>
   </div>
@@ -220,11 +211,11 @@
   <div class="nc-inner">
     <div class="fade-up"><div class="nc-eyebrow">Tournament History</div><h2 class="nc-h2 nc-h2--white">Our Recipients</h2></div>
     <div class="recipients-totals fade-up">
-      <div class="total-badge">💰 Total Raised Since 2009: $100,000+</div>
+      <div class="total-badge">💰 Total Raised Since 2009: $112,600+</div>
       <div class="total-badge">💻 Total Laptops Awarded: 400+</div>
     </div>
     <div class="recipients-grid fade-up">
-      <div class="recipient-card"><div class="recipient-year">2025</div><div class="recipient-amount">NavaCup 18 · TBD</div></div>
+      <div class="recipient-card"><div class="recipient-year">2025</div><div class="recipient-amount">$12,600 raised</div></div>
       <div class="recipient-card"><div class="recipient-year">2024</div><div class="recipient-amount">$21,300 raised</div></div>
       <div class="recipient-card"><div class="recipient-year">2023</div><div class="recipient-amount">$8,000 raised</div></div>
       <div class="recipient-card"><div class="recipient-year">2022</div><div class="recipient-amount">$9,000 raised</div></div>
@@ -238,21 +229,21 @@
   </div>
 </section>
 
-<section class="nc-section nc-section--white" id="partners">
+<section class="nc-section nc-section--white" id="donors">
   <div class="nc-inner">
     <div class="fade-up">
-      <div class="nc-eyebrow">Our Partners</div>
+      <div class="nc-eyebrow">Our Donors</div>
       <h2 class="nc-h2">Together we bridge the divide</h2>
-      <p style="font-size:1rem;color:var(--gray);max-width:540px;margin-bottom:40px;">NavaCup is grateful to every sponsor, hole supporter, and community partner who makes our mission possible.</p>
+      <p style="font-size:1rem;color:var(--gray);max-width:540px;margin-bottom:40px;">NavaCup is grateful to every donor, hole supporter, and community partner who makes our mission possible.</p>
     </div>
     <div class="fade-up">
-      <p style="font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:16px;">Major Sponsors</p>
+      <p style="font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:16px;">Major Donors</p>
       <div class="partners-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:32px;">
         <div class="partner-card"><span>LTBOH · Celebrating 100 Years</span></div>
         <div class="partner-card"><span>Glia Law</span></div>
         <div class="partner-card"><span>TD Bank</span></div>
       </div>
-      <p style="font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:16px;">2025 Hole Sponsors</p>
+      <p style="font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:16px;">2025 Hole Donors</p>
       <div class="partners-grid">
         <div class="partner-card"><span>Kanga Mortgage</span></div>
         <div class="partner-card"><span>Eichhorn Tax</span></div>
@@ -271,12 +262,43 @@
   </div>
 </section>
 
+<!-- PHOTO GALLERY — replace src values with your images when ready -->
+<section class="nc-section nc-section--offwhite">
+  <div class="nc-inner">
+    <div class="fade-up" style="margin-bottom:40px;">
+      <div class="nc-eyebrow">On The Course</div>
+      <h2 class="nc-h2">NavaCup in action</h2>
+      <p style="font-size:1rem;color:var(--gray);max-width:520px;">Photos from our tournaments, award ceremonies, and the students whose lives we've helped change.</p>
+    </div>
+    <!-- Main wide image -->
+    <div class="nc-img-placeholder nc-img-placeholder--wide fade-up" style="margin-bottom:16px;">
+      <img src="assets/img/allgolfers-wide.jpg" alt="NavaCup tournament action shot">
+      Add your main tournament photo here
+    </div>
+    <!-- 3-column grid -->
+    <div class="nc-img-gallery nc-img-gallery--3 fade-up">
+      <div class="nc-img-placeholder nc-img-placeholder--card">
+        <img src="assets/img/navacup-2.jpg" alt="Golfers on the course">
+        Tournament photo
+      </div>
+      <div class="nc-img-placeholder nc-img-placeholder--card">
+        <img src="assets/img/ganesh-kids2.jpg" alt="Laptop award ceremony">
+        Award ceremony photo
+      </div>
+      <div class="nc-img-placeholder nc-img-placeholder--card">
+        <img src="assets/img/ganesh-uoft.jpg" alt="Students with laptops">
+        Students with laptops
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer class="nc-footer">
   <div class="nc-footer__inner">
     <div class="nc-footer__top">
-      <div class="nc-footer__brand"><a href="index.html" class="nc-logo"><div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div><div class="nc-logo__tag">Bridging the Digital Divide</div></a><p>NavaCup Charity Events is a grassroots organization dedicated to bridging the digital divide for Canada's youth.</p></div>
+      <div class="nc-footer__brand"><a href="index.html" class="nc-logo-img"><img src="assets/img/navacup1.png" alt="NavaCup" class="nav-logo-img"></a><p>NavaCup Charity Events is a grassroots organization dedicated to bridging the digital divide for Canada's youth.</p></div>
       <div class="nc-footer__col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="team.html">Our Team</a></li><li><a href="register.html">Register &amp; Give</a></li></ul></div>
-      <div class="nc-footer__col"><h4>About</h4><ul><li><a href="mission.html">Our Mission</a></li><li><a href="#goals">Our Goals</a></li><li><a href="#digital-divide">The Digital Divide</a></li><li><a href="#inspiration">Inspiration</a></li></ul></div>
+      
     </div>
     <div class="nc-footer__bottom"><span>© 2026 NavaCup. All Rights Reserved.</span><span>"One Love" — Bob Marley</span></div>
   </div>
@@ -290,51 +312,15 @@ window.addEventListener('scroll',()=>{let cur='';secs.forEach(s=>{if(window.scro
 </script>
 
 <script>
-(function() {
-  var btn     = document.getElementById('nc-hamburger');
-  var drawer  = document.getElementById('nc-mobile-nav');
-  var overlay = document.getElementById('nc-nav-overlay');
-  var aboutBtn = document.getElementById('mob-about-btn');
-  var aboutSub = document.getElementById('mob-about-sub');
-
-  function openMenu() {
-    btn.classList.add('is-open');
-    btn.setAttribute('aria-expanded', 'true');
-    drawer.classList.add('is-open');
-    drawer.setAttribute('aria-hidden', 'false');
-    overlay.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeMenu() {
-    btn.classList.remove('is-open');
-    btn.setAttribute('aria-expanded', 'false');
-    drawer.classList.remove('is-open');
-    drawer.setAttribute('aria-hidden', 'true');
-    overlay.classList.remove('is-open');
-    document.body.style.overflow = '';
-  }
-
-  btn.addEventListener('click', function() {
-    drawer.classList.contains('is-open') ? closeMenu() : openMenu();
-  });
-  overlay.addEventListener('click', closeMenu);
-
-  // Close on nav link click (navigate away)
-  drawer.querySelectorAll('a').forEach(function(a) {
-    a.addEventListener('click', closeMenu);
-  });
-
-  // About Us accordion
-  aboutBtn.addEventListener('click', function() {
-    var open = aboutSub.classList.toggle('is-open');
-    aboutBtn.classList.toggle('is-open', open);
-    aboutBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-
-  // Close on resize back to desktop
-  window.addEventListener('resize', function() {
-    if (window.innerWidth > 900) closeMenu();
-  });
+(function(){
+  var btn=document.getElementById('nc-hamburger'),drawer=document.getElementById('nc-mobile-nav'),overlay=document.getElementById('nc-nav-overlay'),aBtn=document.getElementById('mob-about-btn'),aSub=document.getElementById('mob-about-sub');
+  function open(){btn.classList.add('is-open');btn.setAttribute('aria-expanded','true');drawer.classList.add('is-open');drawer.setAttribute('aria-hidden','false');overlay.classList.add('is-open');document.body.style.overflow='hidden';}
+  function close(){btn.classList.remove('is-open');btn.setAttribute('aria-expanded','false');drawer.classList.remove('is-open');drawer.setAttribute('aria-hidden','true');overlay.classList.remove('is-open');document.body.style.overflow='';}
+  btn.addEventListener('click',function(){drawer.classList.contains('is-open')?close():open();});
+  overlay.addEventListener('click',close);
+  drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
+  aBtn.addEventListener('click',function(){var o=aSub.classList.toggle('is-open');aBtn.classList.toggle('is-open',o);aBtn.setAttribute('aria-expanded',o?'true':'false');});
+  window.addEventListener('resize',function(){if(window.innerWidth>900)close();});
 })();
 </script>
 </body>

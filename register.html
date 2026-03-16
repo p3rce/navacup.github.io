@@ -6,38 +6,80 @@
 <title>Register &amp; Give – NavaCup</title>
 <link rel="stylesheet" href="navacup.css">
 <style>
-/* ── PAGE HERO ── */
+/* ── PAGE HERO WITH BACKGROUND IMAGE ── */
 .reg-hero {
-  background: var(--navy);
-  padding: calc(var(--nav-height) + 56px) 5% 72px;
+  padding: calc(var(--nav-height) + 64px) 5% 80px;
   position: relative;
+  overflow: hidden;
+  /* ── Set your background image here ── */
+  background:
+    url('assets/img/slideshow/pic5.jpg') center center / cover no-repeat,
+    linear-gradient(135deg, var(--blue) 0%, var(--blue-mid) 60%, var(--blue-bright) 100%);
+  /* The gradient acts as fallback if image hasn't loaded yet */
 }
-.reg-hero::before {
+
+/* Ken Burns slow zoom on the bg image */
+.reg-hero::after {
   content: '';
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse 65% 75% at 75% 50%, rgba(245,166,35,.07), transparent 60%);
+  background: inherit;
+  background-attachment: fixed;
+  animation: regHeroBgZoom 20s ease-in-out infinite alternate;
+  z-index: 0;
   pointer-events: none;
 }
+@keyframes regHeroBgZoom {
+  from { transform: scale(1.0); }
+  to   { transform: scale(1.08); }
+}
+
+/* Layered overlay — dark bottom for readability, lighter in middle */
+.reg-hero::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,.32) 100%),
+    linear-gradient(to top,
+      rgba(4,14,40,.92) 0%,
+      rgba(4,14,40,.55) 30%,
+      rgba(4,14,40,.25) 60%,
+      rgba(4,14,40,.45) 100%),
+    linear-gradient(135deg, rgba(10,45,110,.22) 0%, rgba(14,127,201,.08) 100%);
+}
+
 .reg-hero__inner {
   max-width: var(--max-width); margin: 0 auto;
   display: grid; grid-template-columns: 1fr 1fr;
   gap: 64px; align-items: center;
   position: relative; z-index: 2;
 }
-.reg-hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem,4.5vw,3.4rem); font-weight: 900; color: var(--white); line-height: 1.1; letter-spacing: -.025em; margin-bottom: 18px; }
+
+/* ── GLASS CARD ON LEFT TEXT BLOCK ── */
+.reg-hero__text-card {
+  background: rgba(4, 14, 40, 0.52);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 20px;
+  padding: 40px 36px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.reg-hero h1 { font-size: clamp(2.2rem,4.5vw,3.2rem); font-weight: 900; color: var(--white); line-height: 1.1; letter-spacing: -.025em; margin-bottom: 18px; }
 .reg-hero h1 em { font-style: normal; color: var(--gold); }
-.reg-hero p { font-size: 1.05rem; color: rgba(255,255,255,.68); line-height: 1.75; }
+.reg-hero p { font-size: 1.02rem; color: rgba(255,255,255,.82); line-height: 1.75; }
 .hero-trust { display: flex; flex-direction: column; gap: 14px; margin-top: 32px; }
 .trust-item { display: flex; align-items: center; gap: 12px; }
-.trust-item .ti-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(245,166,35,.15); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
-.trust-item span { font-size: .9rem; color: rgba(255,255,255,.72); }
+.trust-item .ti-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(245,166,35,.18); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.trust-item span { font-size: .9rem; color: rgba(255,255,255,.78); }
 
-/* ── OPTION PANEL (right side of hero) ── */
+/* ── OPTION PANEL — glassmorphism over bg photo ── */
 .option-panel {
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.97);
   border-radius: 24px;
   padding: 36px 32px;
-  box-shadow: 0 24px 60px rgba(0,0,0,.28);
+  box-shadow: 0 24px 60px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.12);
   position: relative;
   z-index: 10;
 }
@@ -199,14 +241,16 @@
 .custom-amount-wrap .nc-input { padding-left: 28px; }
 
 @media(max-width:900px){
-  .reg-hero__inner{grid-template-columns:1fr;}
-  .support-grid{grid-template-columns:1fr 1fr;}
+  .reg-hero__inner { grid-template-columns: 1fr; }
+  .reg-hero__text-card { padding: 28px 22px; }
+  .support-grid { grid-template-columns: 1fr 1fr; }
 }
 @media(max-width:600px){
-  .support-grid{grid-template-columns:1fr;}
-  .ticket-opts{grid-template-columns:1fr;}
-  .amount-btns{grid-template-columns:repeat(2,1fr);}
-  .reg-tabs{grid-template-columns:1fr;}
+  .support-grid { grid-template-columns: 1fr; }
+  .ticket-opts { grid-template-columns: 1fr; }
+  .amount-btns { grid-template-columns: repeat(2,1fr); }
+  .reg-tabs { grid-template-columns: 1fr; }
+  .reg-hero { padding: calc(var(--nav-height) + 40px) 5% 56px; }
 }
 </style>
 </head>
@@ -214,10 +258,7 @@
 
 <!-- NAV -->
 <nav class="nc-nav">
-  <a href="index.html" class="nc-logo">
-    <div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div>
-    <div class="nc-logo__tag">Bridging the Digital Divide</div>
-  </a>
+  <a href="index.html" class="nc-logo-img"><img src="assets/img/navacup1.png" alt="NavaCup" class="nav-logo-img"></a>
   <ul class="nc-nav__links">
     <li class="nc-nav__dropdown">
       <a href="about.html">About Us</a>
@@ -228,7 +269,7 @@
         <a href="about.html#inspiration">NavaCup Inspiration</a>
       </div></div>
     </li>
-    <li><a href="about.html#partners">Our Partners</a></li>
+    <li><a href="about.html#donors">Our Donors</a></li>
     <li><a href="team.html">Our Team</a></li>
     <li><a href="about.html#recipients">Our Recipients</a></li>
     <li><a href="register.html" class="nc-nav__cta">Register &amp; Give</a></li>
@@ -238,48 +279,29 @@
   </button>
 </nav>
 
-<!-- Mobile Nav Drawer -->
 <div class="nc-nav-overlay" id="nc-nav-overlay"></div>
 <div class="nc-mobile-nav" id="nc-mobile-nav" aria-hidden="true">
   <div class="nc-mobile-nav__inner">
-    <a href="index.html" class="nc-mobile-nav__link">Home</a>
-    <button class="nc-mobile-nav__accordion" id="mob-about-btn" aria-expanded="false">
-      About Us
-      <span class="nc-mobile-nav__accordion-icon">▾</span>
-    </button>
+    <button class="nc-mobile-nav__accordion" id="mob-about-btn" aria-expanded="false">About Us <span class="nc-mobile-nav__accordion-icon">&#9662;</span></button>
     <div class="nc-mobile-nav__submenu" id="mob-about-sub">
       <a href="mission.html">Our Mission</a>
       <a href="about.html#goals">Our Goals</a>
       <a href="about.html#digital-divide">The Digital Divide</a>
       <a href="about.html#inspiration">NavaCup Inspiration</a>
     </div>
-    <a href="about.html#partners" class="nc-mobile-nav__link">Our Partners</a>
+    <a href="about.html#donors" class="nc-mobile-nav__link">Our Donors</a>
     <a href="team.html" class="nc-mobile-nav__link">Our Team</a>
     <a href="about.html#recipients" class="nc-mobile-nav__link">Our Recipients</a>
-    <div class="nc-mobile-nav__cta-wrap">
-      <a href="register.html" class="nc-mobile-nav__cta">Register &amp; Give</a>
-    </div>
+    <div class="nc-mobile-nav__cta-wrap"><a href="register.html" class="nc-mobile-nav__cta">Register &amp; Give</a></div>
   </div>
 </div>
 
 <!-- HERO -->
 <section class="reg-hero">
   <div class="reg-hero__inner">
-    <div>
-      <div class="nc-breadcrumb">
-        <a href="index.html">Home</a>
-        <span class="nc-breadcrumb__sep">›</span>
-        <span class="nc-breadcrumb__current">Register &amp; Give</span>
-      </div>
-      <div class="nc-eyebrow">NavaCup 18 · June 6, 2026</div>
+    <div class="reg-hero__text-card">
       <h1>Join the movement.<br><em>Change a life.</em></h1>
-      <p>Every ticket, donation, and sponsorship goes directly to funding brand-new laptops for deserving students across the Greater Toronto Area. Choose how you want to get involved.</p>
-      <div class="hero-trust">
-        <div class="trust-item"><div class="ti-icon">✓</div><span>100% of proceeds go directly to students</span></div>
-        <div class="trust-item"><div class="ti-icon">🔒</div><span>Secure checkout powered by Stripe (coming soon)</span></div>
-        <div class="trust-item"><div class="ti-icon">📧</div><span>Confirmation email sent instantly</span></div>
-        <div class="trust-item"><div class="ti-icon">🏌️</div><span>Cardinal Golf Club · King City, Ontario</span></div>
-      </div>
+      <p>Every ticket, donation, and donorship goes directly to funding brand-new laptops for deserving students across the Greater Toronto Area. Choose how you want to get involved.</p>
     </div>
 
     <!-- FORM PANEL -->
@@ -297,9 +319,9 @@
           <div class="reg-tab__icon">❤️</div>
           <div class="reg-tab__label">Direct<br>Donation</div>
         </div>
-        <div class="reg-tab" data-tab="sponsor">
+        <div class="reg-tab" data-tab="donor">
           <div class="reg-tab__icon">🤝</div>
-          <div class="reg-tab__label">Become a<br>Sponsor</div>
+          <div class="reg-tab__label">Become a<br>Donor</div>
         </div>
       </div>
 
@@ -403,13 +425,13 @@
           Complete Donation
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
-        <p class="secure-note">Secure payment · Stripe integration coming soon</p>
+        <!-- <p class="secure-note">Secure payment · Stripe integration coming soon</p> -->
       </div>
 
       <!-- ===== SPONSOR PANEL ===== -->
-      <div class="form-panel" id="panel-sponsor">
+      <div class="form-panel" id="panel-donor">
         <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.3);border-radius:14px;padding:18px 20px;margin-bottom:22px;">
-          <p style="font-size:.82rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Hole Sponsorship Package</p>
+          <p style="font-size:.82rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Hole Donorship Package</p>
           <div style="font-family:var(--font-display);font-size:2rem;font-weight:900;color:var(--navy);line-height:1;margin-bottom:4px;">$250</div>
           <p style="font-size:.84rem;color:var(--gray);line-height:1.55;">Your company name displayed at a dedicated hole on the course. Includes recognition in our program and on our website.</p>
         </div>
@@ -439,14 +461,14 @@
 
         <hr class="form-divider">
         <div class="summary-row">
-          <span class="summary-row__label">Sponsorship Amount</span>
+          <span class="summary-row__label">Donorship Amount</span>
           <span class="summary-row__value">$250</span>
         </div>
         <button class="pay-btn">
-          Complete Sponsorship
+          Complete Donorship
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
-        <p class="secure-note">Secure payment · Stripe integration coming soon</p>
+        <!-- <p class="secure-note">Secure payment · Stripe integration coming soon</p> -->
       </div>
     </div>
   </div>
@@ -488,8 +510,8 @@
       </div>
       <div class="support-card">
         <div class="support-card__icon">🤝</div>
-        <h3>Hole Sponsorship</h3>
-        <p>Sponsor a hole and get your brand in front of every player on the course. You'll be recognized in our event program and on our website for the full year.</p>
+        <h3>Hole Donorship</h3>
+        <p>Donor a hole and get your brand in front of every player on the course. You'll be recognized in our event program and on our website for the full year.</p>
         <span class="support-card__amount">$250 · Company listing included</span>
       </div>
     </div>
@@ -501,11 +523,11 @@
   <div class="nc-footer__inner">
     <div class="nc-footer__top">
       <div class="nc-footer__brand">
-        <a href="index.html" class="nc-logo"><div class="nc-logo__text"><span class="nc-logo__nava">Nava</span><span class="nc-logo__cup">Cup</span></div><div class="nc-logo__tag">Bridging the Digital Divide</div></a>
+        <a href="index.html" class="nc-logo-img"><img src="assets/img/navacup1.png" alt="NavaCup" class="nav-logo-img"></a>
         <p>NavaCup Charity Events is a grassroots organization dedicated to bridging the digital divide for Canada's youth.</p>
       </div>
       <div class="nc-footer__col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="team.html">Our Team</a></li><li><a href="register.html">Register &amp; Give</a></li></ul></div>
-      <div class="nc-footer__col"><h4>About</h4><ul><li><a href="mission.html">Our Mission</a></li><li><a href="about.html#goals">Our Goals</a></li><li><a href="about.html#digital-divide">The Digital Divide</a></li><li><a href="about.html#inspiration">Inspiration</a></li></ul></div>
+      
     </div>
     <div class="nc-footer__bottom"><span>© 2026 NavaCup. All Rights Reserved.</span><span>"One Love" — Bob Marley</span></div>
   </div>
@@ -636,9 +658,9 @@ function buildPayload(type) {
       email: sanitizeEmail(document.getElementById('d-email').value)
     };
   }
-  if (type === 'sponsor') {
+  if (type === 'donor') {
     return {
-      type: 'sponsor',
+      type: 'donor',
       amount: 250,
       first:   sanitizeText(document.getElementById('s-first').value),
       last:    sanitizeText(document.getElementById('s-last').value),
@@ -679,7 +701,7 @@ function validate(type) {
     if (!isValidEmail(e)) { showErr('d-email', true); ok = false; } else showErr('d-email', false);
   }
 
-  if (type === 'sponsor') {
+  if (type === 'donor') {
     const f = document.getElementById('s-first').value.trim();
     const l = document.getElementById('s-last').value.trim();
     const c = document.getElementById('s-company').value.trim();
@@ -730,7 +752,7 @@ document.querySelectorAll('.pay-btn').forEach(btn => {
 
 // Hash-based deep linking
 const hash = location.hash.replace('#','');
-if (['tickets','donate','sponsor'].includes(hash)) switchTab(hash);
+if (['tickets','donate','donor'].includes(hash)) switchTab(hash);
 
 // Scroll-based fade-ups
 const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: .1 });
@@ -738,51 +760,15 @@ document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 </script>
 
 <script>
-(function() {
-  var btn     = document.getElementById('nc-hamburger');
-  var drawer  = document.getElementById('nc-mobile-nav');
-  var overlay = document.getElementById('nc-nav-overlay');
-  var aboutBtn = document.getElementById('mob-about-btn');
-  var aboutSub = document.getElementById('mob-about-sub');
-
-  function openMenu() {
-    btn.classList.add('is-open');
-    btn.setAttribute('aria-expanded', 'true');
-    drawer.classList.add('is-open');
-    drawer.setAttribute('aria-hidden', 'false');
-    overlay.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeMenu() {
-    btn.classList.remove('is-open');
-    btn.setAttribute('aria-expanded', 'false');
-    drawer.classList.remove('is-open');
-    drawer.setAttribute('aria-hidden', 'true');
-    overlay.classList.remove('is-open');
-    document.body.style.overflow = '';
-  }
-
-  btn.addEventListener('click', function() {
-    drawer.classList.contains('is-open') ? closeMenu() : openMenu();
-  });
-  overlay.addEventListener('click', closeMenu);
-
-  // Close on nav link click (navigate away)
-  drawer.querySelectorAll('a').forEach(function(a) {
-    a.addEventListener('click', closeMenu);
-  });
-
-  // About Us accordion
-  aboutBtn.addEventListener('click', function() {
-    var open = aboutSub.classList.toggle('is-open');
-    aboutBtn.classList.toggle('is-open', open);
-    aboutBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-
-  // Close on resize back to desktop
-  window.addEventListener('resize', function() {
-    if (window.innerWidth > 900) closeMenu();
-  });
+(function(){
+  var btn=document.getElementById('nc-hamburger'),drawer=document.getElementById('nc-mobile-nav'),overlay=document.getElementById('nc-nav-overlay'),aBtn=document.getElementById('mob-about-btn'),aSub=document.getElementById('mob-about-sub');
+  function open(){btn.classList.add('is-open');btn.setAttribute('aria-expanded','true');drawer.classList.add('is-open');drawer.setAttribute('aria-hidden','false');overlay.classList.add('is-open');document.body.style.overflow='hidden';}
+  function close(){btn.classList.remove('is-open');btn.setAttribute('aria-expanded','false');drawer.classList.remove('is-open');drawer.setAttribute('aria-hidden','true');overlay.classList.remove('is-open');document.body.style.overflow='';}
+  btn.addEventListener('click',function(){drawer.classList.contains('is-open')?close():open();});
+  overlay.addEventListener('click',close);
+  drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
+  aBtn.addEventListener('click',function(){var o=aSub.classList.toggle('is-open');aBtn.classList.toggle('is-open',o);aBtn.setAttribute('aria-expanded',o?'true':'false');});
+  window.addEventListener('resize',function(){if(window.innerWidth>900)close();});
 })();
 </script>
 </body>
